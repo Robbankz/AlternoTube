@@ -10,6 +10,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
@@ -77,14 +79,28 @@ fun Greeting() {
                     },
 
                     supportingText = {
-                        it.creator?.let { creator ->
-                            val text = if (it.views > 0) {
-                                "$creator, ${it.views} views"
-                            } else {
-                                creator
+                        it.channel.let { creator ->
+                            val text = when {
+                                it.views > 0 -> {
+                                    "${creator.name}, ${it.views} views"
+                                }
+
+                                else -> {
+                                    creator.name ?: ""
+                                }
                             }
 
-                            Text(text)
+                            Row {
+                                Text(text)
+
+                                if (creator.isVerified) {
+                                    Icon(
+                                        painter = painterResource(R.drawable.ic_baseline_verified_24),
+                                        tint = Color.Cyan,
+                                        contentDescription = null
+                                    )
+                                }
+                            }
                         }
                     },
 

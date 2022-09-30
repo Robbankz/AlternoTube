@@ -23,7 +23,7 @@ class RumbleScraper private constructor() {
                 return emptyList()
             } else {
                 for (element in document.getElementsByClass("video-listing-entry")) {
-                    val searchResult = RumbleSearchResult(null, null, 0, null)
+                    val searchResult = RumbleSearchResult(null, RumbleChannel(null, 0, false), 0, null)
 
                     for (element2 in element.getElementsByClass("video-item--title")) {
                         searchResult.title = element2.text()
@@ -31,7 +31,11 @@ class RumbleScraper private constructor() {
 
                     for (element2 in element.getElementsByClass("video-item--by")) {
                         for (element3 in element2.getElementsByClass("ellipsis-1")) {
-                            searchResult.creator = element3.text()
+                            searchResult.channel.name = element3.text()
+
+                            if (element3.getElementsByClass("video-item--by-verified verification-badge-icon").isNotEmpty()) {
+                                searchResult.channel.isVerified = true
+                            }
                         }
                     }
 
