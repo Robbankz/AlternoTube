@@ -60,6 +60,12 @@ fun Greeting() {
                             Text(title)
                         }
                     },
+
+                    supportingText = {
+                        it.creator?.let { creator ->
+                            Text(creator)
+                        }
+                    }
                 )
                 Divider()
             }
