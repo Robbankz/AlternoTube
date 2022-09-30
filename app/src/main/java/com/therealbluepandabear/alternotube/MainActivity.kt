@@ -9,8 +9,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -39,11 +41,12 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun Greeting() {
     var searchQuery by rememberSaveable { mutableStateOf("") }
     var searchResults by rememberSaveable { mutableStateOf(emptyList<RumbleSearchResult>() )}
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     Column(
         modifier = Modifier
@@ -63,7 +66,8 @@ fun Greeting() {
                     CoroutineScope(Dispatchers.IO).launch {
                         searchResults = RumbleScraper.create().scrapeSearchResultsFromQuery(searchQuery)
                     }
-                }
+                    keyboardController?.hide()
+                },
             ) {
                 Text("Search")
             }
