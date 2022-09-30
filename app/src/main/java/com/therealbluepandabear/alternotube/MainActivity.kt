@@ -8,10 +8,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.runtime.saveable.rememberSaveable
+import coil.compose.AsyncImage
 import com.therealbluepandabear.alternotube.models.RumbleScraper
 import com.therealbluepandabear.alternotube.models.RumbleSearchResult
 import com.therealbluepandabear.alternotube.ui.theme.AlternoTubeTheme
@@ -71,6 +72,14 @@ fun Greeting() {
 
                             Text(text)
                         }
+                    },
+
+                    leadingContent = {
+                        AsyncImage(
+                            it.imageSrc,
+                            contentDescription = null,
+                            modifier = Modifier.size(100.dp, 100.dp)
+                        )
                     }
                 )
                 Divider()

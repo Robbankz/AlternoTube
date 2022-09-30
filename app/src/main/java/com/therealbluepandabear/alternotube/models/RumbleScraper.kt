@@ -23,7 +23,7 @@ class RumbleScraper private constructor() {
                 return emptyList()
             } else {
                 for (element in document.getElementsByClass("video-listing-entry")) {
-                    val searchResult = RumbleSearchResult(null, null, 0)
+                    val searchResult = RumbleSearchResult(null, null, 0, null)
 
                     for (element2 in element.getElementsByClass("video-item--title")) {
                         searchResult.title = element2.text()
@@ -38,6 +38,12 @@ class RumbleScraper private constructor() {
                     for (element2 in element.getElementsByClass("video-item--meta video-item--views")) {
                         if (element2.attr("data-value") != "") {
                             searchResult.views = element2.attr("data-value").toString().replace(",", "").toInt()
+                        }
+                    }
+
+                    for (element2 in element.getElementsByClass("video-item--img")) {
+                        if (element2.attr("src") != "") {
+                            searchResult.imageSrc = element2.attr("src").toString()
                         }
                     }
 
