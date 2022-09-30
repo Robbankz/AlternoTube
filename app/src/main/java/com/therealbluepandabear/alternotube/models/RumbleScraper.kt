@@ -43,7 +43,7 @@ class RumbleScraper private constructor() {
 
                     for (element2 in element.getElementsByClass("video-item--img")) {
                         if (element2.attr("src") != "") {
-                            searchResult.imageSrc = element2.attr("src").toString()
+                            searchResult.thumbnailSrc = element2.attr("src").toString()
                         }
                     }
 

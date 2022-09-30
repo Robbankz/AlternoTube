@@ -90,7 +90,7 @@ fun Greeting() {
 
                     leadingContent = {
                         AsyncImage(
-                            it.imageSrc,
+                            it.thumbnailSrc,
                             contentDescription = null,
                             modifier = Modifier.size(100.dp, 100.dp)
                         )
