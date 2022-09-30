@@ -40,16 +40,30 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Greeting() {
+    var searchQuery by rememberSaveable { mutableStateOf("") }
     var searchResults by rememberSaveable { mutableStateOf(emptyList<RumbleSearchResult>() )}
 
-    Row(
+    Column(
         modifier = Modifier
             .padding(16.dp)
     ) {
+        Row(
+            modifier = Modifier.wrapContentSize()
+        ) {
+            OutlinedTextField(
+                value = searchQuery,
+                onValueChange = { searchQuery = it },
+                label = { Text("Input") }
+            )
 
-        LaunchedEffect(Unit) {
-            CoroutineScope(Dispatchers.IO).launch {
-                searchResults = RumbleScraper.create().scrapeSearchResultsFromQuery("Gaming")
+            Button(
+                onClick = {
+                    CoroutineScope(Dispatchers.IO).launch {
+                        searchResults = RumbleScraper.create().scrapeSearchResultsFromQuery(searchQuery)
+                    }
+                }
+            ) {
+                Text("Search")
             }
         }
 
