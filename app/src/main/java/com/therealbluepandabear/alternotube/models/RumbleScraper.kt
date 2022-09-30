@@ -36,8 +36,8 @@ class RumbleScraper private constructor() {
                     }
 
                     for (element2 in element.getElementsByClass("video-item--meta video-item--views")) {
-                        if (element2.text() != "") {
-                            searchResult.views = element2.text().toInt()
+                        if (element2.attr("data-value") != "") {
+                            searchResult.views = element2.attr("data-value").toString().replace(",", "").toInt()
                         }
                     }
 

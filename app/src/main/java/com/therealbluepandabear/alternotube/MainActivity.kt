@@ -63,7 +63,13 @@ fun Greeting() {
 
                     supportingText = {
                         it.creator?.let { creator ->
-                            Text(creator)
+                            val text = if (it.views > 0) {
+                                "$creator, ${it.views} views"
+                            } else {
+                                creator
+                            }
+
+                            Text(text)
                         }
                     }
                 )
