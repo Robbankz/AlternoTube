@@ -8,7 +8,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -17,9 +16,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.therealbluepandabear.alternotube.models.RumbleScraper
-import com.therealbluepandabear.alternotube.models.RumbleSearchResult
 import com.therealbluepandabear.alternotube.ui.theme.AlternoTubeTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -45,8 +44,7 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun MainComposable() {
-    var searchQuery by rememberSaveable { mutableStateOf("") }
-    var searchResults by rememberSaveable { mutableStateOf(emptyList<RumbleSearchResult>() )}
+    val viewModel: MainActivityViewModel = viewModel()
     val keyboardController = LocalSoftwareKeyboardController.current
 
     Column(
@@ -57,8 +55,8 @@ fun MainComposable() {
             modifier = Modifier.wrapContentSize()
         ) {
             OutlinedTextField(
-                value = searchQuery,
-                onValueChange = { searchQuery = it },
+                value = viewModel.searchQuery,
+                onValueChange = { viewModel.searchQuery = it },
                 label = {
                     Text(
                         stringResource(id = R.string.mainActivity_search)
@@ -69,7 +67,7 @@ fun MainComposable() {
             Button(
                 onClick = {
                     CoroutineScope(Dispatchers.IO).launch {
-                        searchResults = RumbleScraper.create().scrapeSearchResultsFromQuery(searchQuery)
+                        viewModel.searchResults = RumbleScraper.create().scrapeSearchResultsFromQuery(viewModel.searchQuery)
                     }
                     keyboardController?.hide()
                 },
@@ -81,7 +79,7 @@ fun MainComposable() {
         }
 
         LazyColumn {
-            items(searchResults) {
+            items(viewModel.searchResults) {
                 ListItem(
                     headlineText = {
                         it.title?.let { title ->
