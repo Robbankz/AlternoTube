@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
@@ -58,7 +59,11 @@ fun Greeting() {
             OutlinedTextField(
                 value = searchQuery,
                 onValueChange = { searchQuery = it },
-                label = { Text("Input") }
+                label = {
+                    Text(
+                        stringResource(id = R.string.mainActivity_search)
+                    )
+                }
             )
 
             Button(
@@ -69,7 +74,9 @@ fun Greeting() {
                     keyboardController?.hide()
                 },
             ) {
-                Text("Search")
+                Text(
+                    stringResource(id = R.string.mainActivity_search)
+                )
             }
         }
 
@@ -101,7 +108,7 @@ fun Greeting() {
                                     Icon(
                                         painter = painterResource(R.drawable.ic_baseline_verified_24),
                                         tint = Color.Cyan,
-                                        contentDescription = null
+                                        contentDescription = stringResource(id = R.string.mainActivity_verified_content_description)
                                     )
                                 }
                             }

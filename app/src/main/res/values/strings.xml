@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">AlternoTube</string>
+    <string name="mainActivity_verified_content_description">Verified</string>
+    <string name="mainActivity_search">Search</string>
 </resources>
