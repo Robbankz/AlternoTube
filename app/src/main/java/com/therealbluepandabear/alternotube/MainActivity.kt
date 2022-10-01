@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -100,7 +101,7 @@ fun MainComposable() {
     val viewModel: MainActivityViewModel = viewModel()
     val keyboardController = LocalSoftwareKeyboardController.current
 
-    var openDialog by remember { mutableStateOf(false) }
+    var openDialog by rememberSaveable { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
