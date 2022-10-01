@@ -3,6 +3,7 @@ package com.therealbluepandabear.alternotube
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -44,7 +45,7 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RumbleSearchResult(rumbleSearchResult: RumbleSearchResult) {
+fun RumbleSearchResult(rumbleSearchResult: RumbleSearchResult, onClick: () -> Unit) {
     ListItem(
         headlineText = {
             rumbleSearchResult.title?.let { title ->
@@ -84,6 +85,10 @@ fun RumbleSearchResult(rumbleSearchResult: RumbleSearchResult) {
                 contentDescription = null,
                 modifier = Modifier.size(100.dp, 100.dp)
             )
+        },
+
+        modifier = Modifier.clickable {
+            onClick.invoke()
         }
     )
     Divider()
@@ -94,6 +99,8 @@ fun RumbleSearchResult(rumbleSearchResult: RumbleSearchResult) {
 fun MainComposable() {
     val viewModel: MainActivityViewModel = viewModel()
     val keyboardController = LocalSoftwareKeyboardController.current
+
+    var openDialog by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -128,9 +135,46 @@ fun MainComposable() {
 
         LazyColumn {
             items(viewModel.searchResults) {
-                RumbleSearchResult(rumbleSearchResult = it)
+                RumbleSearchResult(rumbleSearchResult = it) {
+                    openDialog = true
+                    viewModel.currentRumbleSearchResult = it
+                }
             }
         }
+    }
+
+    if (openDialog) {
+        AlertDialog(
+            onDismissRequest = {
+                openDialog = false
+            },
+            title = {
+                Column {
+                    Text(
+                        text = viewModel.currentRumbleSearchResult?.title ?: ""
+                    )
+                    Spacer(
+                        Modifier.height(8.dp)
+                    )
+                    Text(
+                        text = "By ${viewModel.currentRumbleSearchResult?.channel?.name ?: ""}",
+                        style = MaterialTheme.typography.titleSmall
+                    )
+                }
+            },
+            text = {
+
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        openDialog = false
+                    }
+                ) {
+                    Text("Exit")
+                }
+            }
+        )
     }
 }
 
