@@ -35,7 +35,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting()
+                    MainComposable()
                 }
             }
         }
@@ -44,7 +44,7 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
-fun Greeting() {
+fun MainComposable() {
     var searchQuery by rememberSaveable { mutableStateOf("") }
     var searchResults by rememberSaveable { mutableStateOf(emptyList<RumbleSearchResult>() )}
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -133,6 +133,6 @@ fun Greeting() {
 @Composable
 fun DefaultPreview() {
     AlternoTubeTheme {
-        Greeting()
+        MainComposable()
     }
 }
