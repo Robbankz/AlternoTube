@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.therealbluepandabear.alternotube.models.RumbleScraper
+import com.therealbluepandabear.alternotube.models.RumbleSearchResult
 import com.therealbluepandabear.alternotube.ui.theme.AlternoTubeTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -39,6 +40,53 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun RumbleSearchResult(rumbleSearchResult: RumbleSearchResult) {
+    ListItem(
+        headlineText = {
+            rumbleSearchResult.title?.let { title ->
+                Text(title)
+            }
+        },
+
+        supportingText = {
+            rumbleSearchResult.channel.let { creator ->
+                val text = when {
+                    rumbleSearchResult.views > 0 -> {
+                        "${creator.name}, ${rumbleSearchResult.views} views"
+                    }
+
+                    else -> {
+                        creator.name ?: ""
+                    }
+                }
+
+                Row {
+                    Text(text)
+
+                    if (creator.isVerified) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_baseline_verified_24),
+                            tint = Color.Cyan,
+                            contentDescription = stringResource(id = R.string.mainActivity_verified_content_description)
+                        )
+                    }
+                }
+            }
+        },
+
+        leadingContent = {
+            AsyncImage(
+                rumbleSearchResult.thumbnailSrc,
+                contentDescription = null,
+                modifier = Modifier.size(100.dp, 100.dp)
+            )
+        }
+    )
+    Divider()
 }
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
@@ -80,48 +128,7 @@ fun MainComposable() {
 
         LazyColumn {
             items(viewModel.searchResults) {
-                ListItem(
-                    headlineText = {
-                        it.title?.let { title ->
-                            Text(title)
-                        }
-                    },
-
-                    supportingText = {
-                        it.channel.let { creator ->
-                            val text = when {
-                                it.views > 0 -> {
-                                    "${creator.name}, ${it.views} views"
-                                }
-
-                                else -> {
-                                    creator.name ?: ""
-                                }
-                            }
-
-                            Row {
-                                Text(text)
-
-                                if (creator.isVerified) {
-                                    Icon(
-                                        painter = painterResource(R.drawable.ic_baseline_verified_24),
-                                        tint = Color.Cyan,
-                                        contentDescription = stringResource(id = R.string.mainActivity_verified_content_description)
-                                    )
-                                }
-                            }
-                        }
-                    },
-
-                    leadingContent = {
-                        AsyncImage(
-                            it.thumbnailSrc,
-                            contentDescription = null,
-                            modifier = Modifier.size(100.dp, 100.dp)
-                        )
-                    }
-                )
-                Divider()
+                RumbleSearchResult(rumbleSearchResult = it)
             }
         }
     }
