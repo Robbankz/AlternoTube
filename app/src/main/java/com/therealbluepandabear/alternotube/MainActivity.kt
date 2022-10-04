@@ -1,6 +1,8 @@
 package com.therealbluepandabear.alternotube
 
 import android.os.Bundle
+import android.view.ViewGroup
+import android.widget.FrameLayout
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.clickable
@@ -13,19 +15,22 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
+import com.google.android.exoplayer2.ExoPlayer
+import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.ui.StyledPlayerView
 import com.therealbluepandabear.alternotube.models.RumbleScraper
 import com.therealbluepandabear.alternotube.models.RumbleSearchResult
 import com.therealbluepandabear.alternotube.ui.theme.AlternoTubeTheme
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -95,6 +100,44 @@ fun RumbleSearchResult(rumbleSearchResult: RumbleSearchResult, onClick: () -> Un
     Divider()
 }
 
+@Composable
+fun VideoPlayer(videoSrc: String) {
+    val context = LocalContext.current
+
+    val exoPlayer = remember {
+        ExoPlayer.Builder(context).build().apply {
+            setMediaItem(
+                MediaItem.fromUri(
+                    videoSrc
+                )
+            )
+            prepare()
+            playWhenReady = true
+        }
+    }
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        DisposableEffect(key1 = Unit) {
+            onDispose {
+                exoPlayer.release()
+            }
+        }
+
+        AndroidView(
+            factory = {
+                StyledPlayerView(context).apply {
+                    player = exoPlayer
+                    layoutParams =
+                        FrameLayout.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.MATCH_PARENT
+                        )
+                }
+            }
+        )
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun MainComposable() {
@@ -137,8 +180,11 @@ fun MainComposable() {
         LazyColumn {
             items(viewModel.searchResults) {
                 RumbleSearchResult(rumbleSearchResult = it) {
-                    openDialog = true
-                    viewModel.currentRumbleSearchResult = it
+                    CoroutineScope(Dispatchers.IO).launch {
+                        viewModel.currentVideoSrc = RumbleScraper.create().scrapeVideoSrcFromUrl(it.videoUrl!!)
+                        openDialog = true
+                        viewModel.currentRumbleSearchResult = it
+                    }
                 }
             }
         }
@@ -164,7 +210,11 @@ fun MainComposable() {
                 }
             },
             text = {
-
+                viewModel.currentRumbleSearchResult?.let {
+                    if (it.videoUrl != null) {
+                        viewModel.currentVideoSrc?.let { it1 -> VideoPlayer(it1) }
+                    }
+                }
             },
             confirmButton = {
                 TextButton(

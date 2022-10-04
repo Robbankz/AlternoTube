@@ -10,4 +10,5 @@ class MainActivityViewModel : ViewModel() {
     var searchQuery by mutableStateOf("")
     var searchResults by mutableStateOf(emptyList<RumbleSearchResult>())
     var currentRumbleSearchResult: RumbleSearchResult? by mutableStateOf(null)
+    var currentVideoSrc: String? by mutableStateOf(null)
 }

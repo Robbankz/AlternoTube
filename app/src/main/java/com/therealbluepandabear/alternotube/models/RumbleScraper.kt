@@ -1,11 +1,14 @@
 package com.therealbluepandabear.alternotube.models
 
+import com.google.gson.Gson
+import com.google.gson.JsonParser
 import org.jsoup.Jsoup
 import java.io.IOException
 
 class RumbleScraper private constructor() {
     companion object {
         private const val RUMBLE_URL = "https://rumble.com/"
+        private const val RUMBLE_API_URL = "https://rumble.com/embedJS/u3/?request=video&ver=2&v="
 
         fun create(): RumbleScraper {
             return RumbleScraper()
@@ -23,7 +26,7 @@ class RumbleScraper private constructor() {
                 return emptyList()
             } else {
                 for (element in document.getElementsByClass("video-listing-entry")) {
-                    val searchResult = RumbleSearchResult(null, RumbleChannel(null, 0, false), 0, null)
+                    val searchResult = RumbleSearchResult(null, RumbleChannel(null, 0, false), 0, null, null)
 
                     for (element2 in element.getElementsByClass("video-item--title")) {
                         searchResult.title = element2.text()
@@ -51,6 +54,12 @@ class RumbleScraper private constructor() {
                         }
                     }
 
+                    for (element2 in element.getElementsByClass("video-item--a")) {
+                        if (element2.attr("href") != "") {
+                            searchResult.videoUrl = "${RUMBLE_URL}${element2.attr("href")}"
+                        }
+                    }
+
                     searchResults.add(searchResult)
                 }
 
@@ -61,5 +70,36 @@ class RumbleScraper private constructor() {
         }
 
         return emptyList()
+    }
+
+    fun scrapeVideoSrcFromUrl(url: String): String? {
+        val document = Jsoup.connect(url).get()
+
+        for (element in document.getElementsByTag("script")) {
+            if (element.attr("type") == "application/ld+json") {
+                val content = element.data()
+                val array = JsonParser.parseString(content).asJsonArray
+
+                val embedUrl = Gson().fromJson(array.get(0).asJsonObject.get("embedUrl"), String::class.java)
+                var embedId = ""
+
+                for (char in embedUrl.dropLast(1).reversed()) {
+                    if (char != '/') {
+                        embedId += char
+                    } else {
+                        break
+                    }
+                }
+
+                val doc = Jsoup.connect("$RUMBLE_API_URL${embedId.reversed()}").ignoreContentType(true).get()
+                val jsonData = doc.getElementsByTag("body").first()?.text()
+
+                val mp4 = JsonParser.parseString(jsonData).asJsonObject.get("u").asJsonObject.get("mp4").asJsonObject.get("url").toString()
+
+                return mp4.replace("\"", "")
+            }
+        }
+
+        return null
     }
 }
