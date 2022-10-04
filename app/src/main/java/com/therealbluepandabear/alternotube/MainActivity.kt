@@ -181,10 +181,7 @@ fun MainComposable() {
             items(viewModel.searchResults) {
                 RumbleSearchResult(rumbleSearchResult = it) {
                     CoroutineScope(Dispatchers.IO).launch {
-                        it.videoUrl?.let { videoUrl ->
-                            viewModel.currentVideoSrc = RumbleScraper.create().scrapeVideoSrcFromUrl(videoUrl)
-                        }
-
+                        viewModel.currentVideoSrc = RumbleScraper.create().scrapeVideoSrcFromUrl(it.videoUrl!!)
                         openDialog = true
                         viewModel.currentRumbleSearchResult = it
                     }
@@ -215,9 +212,7 @@ fun MainComposable() {
             text = {
                 viewModel.currentRumbleSearchResult?.let {
                     if (it.videoUrl != null) {
-                        VideoPlayer(it.videoUrl!!)
-                    } else {
-                        Text("Unable to play video")
+                        viewModel.currentVideoSrc?.let { it1 -> VideoPlayer(it1) }
                     }
                 }
             },
