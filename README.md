@@ -19,4 +19,4 @@ My goal with this project is to create a one hundred percent private, all-in-one
 
 High-level Tor overview (I'm also still learning):
 
-<img src="https://cdn.arstechnica.net/wp-content/uploads/2014/01/tor-structure.jpg" alt="See the source image"/>![image](https://user-images.githubusercontent.com/50536495/193781600-791ff5e3-73c7-4f8c-89af-6ae484d54ccc.png)
+<img src="https://cdn.arstechnica.net/wp-content/uploads/2014/01/tor-structure.jpg" alt="See the source image"/>
