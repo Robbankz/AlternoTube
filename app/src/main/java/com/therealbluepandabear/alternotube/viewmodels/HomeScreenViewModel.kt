@@ -17,7 +17,7 @@ class HomeScreenViewModel : ViewModel() {
 
     fun scrapeSearchResults(query: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            finalizedSearchQuery = Pair(query.trim(), rumbleScraper.scrapeSearchResults(query))
+            finalizedSearchQuery = Pair(query, rumbleScraper.scrapeSearchResults(query))
         }
     }
 }
