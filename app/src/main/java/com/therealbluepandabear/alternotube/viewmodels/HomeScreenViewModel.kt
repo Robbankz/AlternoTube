@@ -12,12 +12,11 @@ import kotlinx.coroutines.launch
 
 class HomeScreenViewModel : ViewModel() {
     private val rumbleScraper = RumbleScraper.create()
-    private val dispatcher = Dispatchers.IO
 
     var finalizedSearchQuery: Pair<String, List<RumbleSearchResult>>? by mutableStateOf(null)
 
     fun scrapeSearchResults(query: String) {
-        viewModelScope.launch(dispatcher) {
+        viewModelScope.launch(Dispatchers.IO) {
             finalizedSearchQuery = Pair(query.trim(), rumbleScraper.scrapeSearchResults(query))
         }
     }
