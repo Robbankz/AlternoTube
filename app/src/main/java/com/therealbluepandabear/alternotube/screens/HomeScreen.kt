@@ -111,16 +111,16 @@ fun HomeScreen() {
         }
 
         when {
-            viewModel.finalizedSearchQuery != null && viewModel.finalizedSearchQuery!!.results.isEmpty() -> {
+            viewModel.finalizedSearchQuery != null && viewModel.finalizedSearchQuery!!.second.isEmpty() -> {
                 Text(
                     "No results found"
                 )
             }
 
 
-            viewModel.finalizedSearchQuery != null && viewModel.finalizedSearchQuery!!.results.isNotEmpty() -> {
+            viewModel.finalizedSearchQuery != null && viewModel.finalizedSearchQuery!!.second.isNotEmpty() -> {
                 LazyColumn {
-                    items(viewModel.finalizedSearchQuery!!.results) {
+                    items(viewModel.finalizedSearchQuery!!.second) {
                         RumbleSearchResult(rumbleSearchResult = it) { }
                     }
                 }

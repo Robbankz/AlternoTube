@@ -14,13 +14,11 @@ class HomeScreenViewModel : ViewModel() {
     private val rumbleScraper = RumbleScraper.create()
     private val dispatcher = Dispatchers.IO
 
-    data class SearchQuery(val query: String, var results: List<RumbleSearchResult>)
-
-    var finalizedSearchQuery: SearchQuery? by mutableStateOf(null)
+    var finalizedSearchQuery: Pair<String, List<RumbleSearchResult>>? by mutableStateOf(null)
 
     fun scrapeSearchResults(query: String) {
         viewModelScope.launch(dispatcher) {
-            finalizedSearchQuery = SearchQuery(query.trim(), rumbleScraper.scrapeSearchResults(query))
+            finalizedSearchQuery = Pair(query.trim(), rumbleScraper.scrapeSearchResults(query))
         }
     }
 }
