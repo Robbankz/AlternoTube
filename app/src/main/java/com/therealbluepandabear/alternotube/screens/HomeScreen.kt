@@ -111,7 +111,7 @@ fun HomeScreen() {
         }
 
         when {
-            (query.isBlank() && query != "") || (viewModel.finalizedSearchQuery != null && viewModel.finalizedSearchQuery!!.results.isEmpty()) -> {
+            viewModel.finalizedSearchQuery != null && viewModel.finalizedSearchQuery!!.results.isEmpty() -> {
                 Text(
                     "No results found"
                 )
