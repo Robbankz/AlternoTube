@@ -111,11 +111,12 @@ fun HomeScreen() {
         }
 
         when {
-            viewModel.finalizedSearchQuery != null && viewModel.finalizedSearchQuery!!.results.isEmpty() -> {
+            (query.isBlank() && query != "") || (viewModel.finalizedSearchQuery != null && viewModel.finalizedSearchQuery!!.results.isEmpty()) -> {
                 Text(
-                    "Could not find search results for ${viewModel.finalizedSearchQuery!!.query}"
+                    "No results found"
                 )
             }
+
 
             viewModel.finalizedSearchQuery != null && viewModel.finalizedSearchQuery!!.results.isNotEmpty() -> {
                 LazyColumn {
