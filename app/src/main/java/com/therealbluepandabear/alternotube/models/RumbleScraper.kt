@@ -15,7 +15,7 @@ class RumbleScraper private constructor() {
         }
     }
 
-    fun scrapeSearchResultsFromQuery(query: String, page: Int = 1): List<RumbleSearchResult> {
+    fun scrapeSearchResults(query: String, page: Int = 1): List<RumbleSearchResult> {
         try {
             val searchResults = mutableListOf<RumbleSearchResult>()
 
@@ -72,7 +72,7 @@ class RumbleScraper private constructor() {
         return emptyList()
     }
 
-    fun scrapeVideoSrcFromUrl(url: String): String? {
+    fun scrapeVideoSource(url: String): String? {
         val document = Jsoup.connect(url).get()
 
         for (element in document.getElementsByTag("script")) {
