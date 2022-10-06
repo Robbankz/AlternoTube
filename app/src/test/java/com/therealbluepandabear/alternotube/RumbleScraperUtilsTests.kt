@@ -45,4 +45,20 @@ class RumbleScraperUtilsTests {
             100_240_000
         )
     }
+
+    @Test
+    fun intIsCorrectForShorthandNumber_6() {
+        Assert.assertEquals(
+            RumbleScraperUtils.convertShorthandNumberToInt("5K"),
+            5_000
+        )
+    }
+
+    @Test
+    fun intIsCorrectForShorthandNumber_7() {
+        Assert.assertEquals(
+            RumbleScraperUtils.convertShorthandNumberToInt("37K"),
+            37_000
+        )
+    }
 }
