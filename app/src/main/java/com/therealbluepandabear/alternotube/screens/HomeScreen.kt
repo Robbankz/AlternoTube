@@ -119,7 +119,7 @@ fun HomeScreen(onVideoTapped: (String) -> Unit = { }) {
                 LazyColumn {
                     items(viewModel.finalizedSearchQuery!!.second) {
                         RumbleSearchResult(rumbleSearchResult = it) {
-                            onVideoTapped(it.id)
+                            onVideoTapped(it.getVideoId())
                         }
                     }
                 }

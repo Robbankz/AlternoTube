@@ -7,6 +7,9 @@ data class RumbleSearchResult(
     var thumbnailSrc: String,
     var videoUrl: String
 ) {
-    val id: String
-        get() = videoUrl.substring(20..25)
+    fun getVideoId(): String {
+        val subString = videoUrl.substring(20)
+
+        return subString.substring(0, subString.indexOf("-"))
+    }
 }
