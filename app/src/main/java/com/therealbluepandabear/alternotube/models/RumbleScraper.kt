@@ -15,7 +15,7 @@ class RumbleScraper private constructor() {
         }
     }
 
-    fun scrapeSearchResults(query: String, page: Int = 1): JsoupResponse<List<RumbleSearchResult>> {
+    fun scrpSearchResults(query: String, page: Int = 1): JsoupResponse<List<RumbleSearchResult>> {
         val exception: Exception?
 
         try {
@@ -75,7 +75,7 @@ class RumbleScraper private constructor() {
         return JsoupResponse(exception, emptyList())
     }
 
-    fun scrapeVideoSource(id: String): JsoupResponse<String?> {
+    fun scrpVideoSource(id: String): JsoupResponse<String?> {
         var exception: Exception? = null
 
         try {
@@ -113,7 +113,7 @@ class RumbleScraper private constructor() {
         return JsoupResponse(exception, null)
     }
 
-    fun scrapeVideoDetailsForId(id: String): JsoupResponse<RumbleVideo?> {
+    fun scrpVideoDetails(id: String): JsoupResponse<RumbleVideo?> {
         val exception: Exception?
 
         try {
