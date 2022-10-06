@@ -5,7 +5,7 @@ import org.junit.Test
 
 import org.junit.Assert.*
 
-class VideoSrcTests {
+class VideoSourceScraperTests {
     private val rumbleScraper = RumbleScraper.create()
 
     @Test

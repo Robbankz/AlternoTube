@@ -6,6 +6,9 @@ object RumbleScraperUtils {
      * Converts shorthand numbers such as 15.5K or
      * 3.5K to their integer forms, which are 15500 or 3500.
      *
+     * The input must be in the right format or else the function
+     * will throw an exception!
+     *
      * The implementation isn't the best or most concise, so it
      * could do with some improvements, but it gets the job done.
      */
