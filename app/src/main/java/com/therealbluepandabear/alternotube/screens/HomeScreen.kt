@@ -25,9 +25,7 @@ import com.therealbluepandabear.alternotube.models.RumbleSearchResult
 fun RumbleSearchResult(rumbleSearchResult: RumbleSearchResult, onClick: () -> Unit) {
     ListItem(
         headlineText = {
-            rumbleSearchResult.title?.let { title ->
-                Text(title)
-            }
+            Text(rumbleSearchResult.title)
         },
 
         supportingText = {
@@ -49,7 +47,7 @@ fun RumbleSearchResult(rumbleSearchResult: RumbleSearchResult, onClick: () -> Un
                         Icon(
                             painter = painterResource(R.drawable.ic_baseline_verified_24),
                             tint = Color.Cyan,
-                            contentDescription = stringResource(id = R.string.mainActivity_verified_content_description)
+                            contentDescription = stringResource(id = R.string.homeScreen_verified_content_description)
                         )
                     }
                 }
@@ -73,7 +71,7 @@ fun RumbleSearchResult(rumbleSearchResult: RumbleSearchResult, onClick: () -> Un
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
-fun HomeScreen() {
+fun HomeScreen(onVideoTapped: (String) -> Unit = { }) {
     val viewModel: HomeScreenViewModel = viewModel()
     val keyboardController = LocalSoftwareKeyboardController.current
 
@@ -91,7 +89,7 @@ fun HomeScreen() {
                 onValueChange = { query = it },
                 label = {
                     Text(
-                        stringResource(id = R.string.mainActivity_search)
+                        stringResource(id = R.string.homeScreen_search)
                     )
                 }
             )
@@ -105,7 +103,7 @@ fun HomeScreen() {
                 },
             ) {
                 Text(
-                    stringResource(id = R.string.mainActivity_search)
+                    stringResource(id = R.string.homeScreen_search)
                 )
             }
         }
@@ -113,15 +111,16 @@ fun HomeScreen() {
         when {
             viewModel.finalizedSearchQuery != null && viewModel.finalizedSearchQuery!!.second.isEmpty() -> {
                 Text(
-                    "No results found"
+                    stringResource(id = R.string.homeScreen_no_results_found)
                 )
             }
-
 
             viewModel.finalizedSearchQuery != null && viewModel.finalizedSearchQuery!!.second.isNotEmpty() -> {
                 LazyColumn {
                     items(viewModel.finalizedSearchQuery!!.second) {
-                        RumbleSearchResult(rumbleSearchResult = it) { }
+                        RumbleSearchResult(rumbleSearchResult = it) {
+                            onVideoTapped(it.id)
+                        }
                     }
                 }
             }

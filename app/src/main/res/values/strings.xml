@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">AlternoTube</string>
-    <string name="mainActivity_verified_content_description">Verified</string>
-    <string name="mainActivity_search">Search</string>
+
+    <string name="homeScreen_verified_content_description">Verified</string>
+    <string name="homeScreen_search">Search</string>
+    <string name="homeScreen_no_results_found">No results found</string>
+
+    <string name="videoScreen_failed_to_play_video">Failed to play video, encountered %1$s</string>
 </resources>

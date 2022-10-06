@@ -6,8 +6,15 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.therealbluepandabear.alternotube.screens.HomeScreen
+import com.therealbluepandabear.alternotube.screens.VideoScreen
 import com.therealbluepandabear.alternotube.ui.theme.AlternoTubeTheme
 
 class MainActivity : ComponentActivity() {
@@ -20,8 +27,30 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    HomeScreen()
+                    AlternoTube()
                 }
+            }
+        }
+    }
+
+    @Composable
+    private fun AlternoTube() {
+        val navController = rememberNavController()
+
+        NavHost(navController, startDestination = "home") {
+            composable(route = "home") {
+                HomeScreen { videoId ->
+                    navController.navigate("home/${videoId}")
+                }
+            }
+
+            composable(
+                route = "home/{videoId}",
+                arguments = listOf(navArgument("videoId") {
+                    type = NavType.StringType
+                })
+            ) {
+                VideoScreen()
             }
         }
     }

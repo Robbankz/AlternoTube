@@ -26,7 +26,7 @@ class RumbleScraper private constructor() {
                 return emptyList()
             } else {
                 for (element in document.getElementsByClass("video-listing-entry")) {
-                    val searchResult = RumbleSearchResult(null, RumbleChannel(null, 0, false), 0, null, null)
+                    val searchResult = RumbleSearchResult("", RumbleChannel("", 0, false), 0, "", "")
 
                     for (element2 in element.getElementsByClass("video-item--title")) {
                         searchResult.title = element2.text()
@@ -72,34 +72,41 @@ class RumbleScraper private constructor() {
         return emptyList()
     }
 
-    fun scrapeVideoSource(url: String): String? {
-        val document = Jsoup.connect(url).get()
+    fun scrapeVideoSource(id: String): JsoupResponse {
+        var exception: Exception? = null
 
-        for (element in document.getElementsByTag("script")) {
-            if (element.attr("type") == "application/ld+json") {
-                val content = element.data()
-                val array = JsonParser.parseString(content).asJsonArray
+        try {
+            val document = Jsoup.connect("${RUMBLE_URL}$id").get()
 
-                val embedUrl = Gson().fromJson(array.get(0).asJsonObject.get("embedUrl"), String::class.java)
-                var embedId = ""
+            for (element in document.getElementsByTag("script")) {
+                if (element.attr("type") == "application/ld+json") {
+                    val content = element.data()
+                    val array = JsonParser.parseString(content).asJsonArray
 
-                for (char in embedUrl.dropLast(1).reversed()) {
-                    if (char != '/') {
-                        embedId += char
-                    } else {
-                        break
+                    val embedUrl = Gson().fromJson(array.get(0).asJsonObject.get("embedUrl"), String::class.java)
+                    var embedId = ""
+
+                    for (char in embedUrl.dropLast(1).reversed()) {
+                        if (char != '/') {
+                            embedId += char
+                        } else {
+                            break
+                        }
                     }
+
+                    val doc = Jsoup.connect("$RUMBLE_API_URL${embedId.reversed()}").ignoreContentType(true).get()
+                    val jsonData = doc.getElementsByTag("body").first()?.text()
+
+                    val mp4 = JsonParser.parseString(jsonData).asJsonObject.get("u").asJsonObject.get("mp4").asJsonObject.get("url").toString()
+
+                    return JsoupResponse(null, mp4.replace("\"", ""))
                 }
-
-                val doc = Jsoup.connect("$RUMBLE_API_URL${embedId.reversed()}").ignoreContentType(true).get()
-                val jsonData = doc.getElementsByTag("body").first()?.text()
-
-                val mp4 = JsonParser.parseString(jsonData).asJsonObject.get("u").asJsonObject.get("mp4").asJsonObject.get("url").toString()
-
-                return mp4.replace("\"", "")
             }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            exception = e
         }
 
-        return null
+        return JsoupResponse(exception, null)
     }
 }
