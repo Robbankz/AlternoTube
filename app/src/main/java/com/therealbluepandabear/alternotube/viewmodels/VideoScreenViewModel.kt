@@ -1,6 +1,5 @@
 package com.therealbluepandabear.alternotube.viewmodels
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
@@ -37,7 +36,6 @@ class VideoScreenViewModel(stateHandle: SavedStateHandle) : ViewModel() {
     private fun scrapeVideoDetailsForId(id: String) {
         viewModelScope.launch(dispatcher) {
             video = rumbleScraper.scrapeVideoDetailsForId(id)
-            Log.d("BEPPER", video.toString())
         }
     }
 }

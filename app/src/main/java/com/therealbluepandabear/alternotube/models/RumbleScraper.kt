@@ -1,6 +1,5 @@
 package com.therealbluepandabear.alternotube.models
 
-import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.JsonParser
 import org.jsoup.Jsoup
@@ -127,7 +126,6 @@ class RumbleScraper private constructor() {
             video.title = document.title()
             video.rumbles = RumbleScraperUtils.convertShorthandNumberToInt(document.getElementsByClass("rumbles-vote").first()?.getElementsByClass("rumbles-count")?.first()?.text().toString())
 
-            Log.d("BEPPER", video.rumbles.toString())
             return JsoupResponse(null, video)
         } catch (e: Exception) {
             e.printStackTrace()
