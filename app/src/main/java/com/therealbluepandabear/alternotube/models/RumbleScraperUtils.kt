@@ -17,14 +17,23 @@ object RumbleScraperUtils {
             'K' -> 1_000
             'M' -> 1_000_000
             'B' -> 1_000_000_000
-            else -> return shorthandNumber.toInt()
+            else -> 0
         }
 
-        val chunk1 = shorthandNumber.substring(0, shorthandNumber.indexOf('.'))
-        val chunk2 = shorthandNumber.substring(shorthandNumber.indexOf('.') + 1, shorthandNumber.length - 1)
+        val chunk1 = if (shorthandNumber.contains('.')) {
+            shorthandNumber.substring(0, shorthandNumber.indexOf('.'))
+        } else {
+            shorthandNumber.substring(0, shorthandNumber.length - 1)
+        }
 
-        val fracInc = "1" + "0".repeat(chunk2.length)
+        return if (shorthandNumber.contains('.')) {
+            val chunk2 = shorthandNumber.substring(shorthandNumber.indexOf('.') + 1, shorthandNumber.length - 1)
 
-        return (chunk1.toInt() * mul) + ((chunk2.toInt() * mul) / fracInc.toInt())
+            val fracInc = "1" + "0".repeat(chunk2.length)
+
+            (chunk1.toInt() * mul) + ((chunk2.toInt() * mul) / fracInc.toInt())
+        } else {
+            (chunk1.toInt() * mul)
+        }
     }
 }
