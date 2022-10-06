@@ -109,17 +109,17 @@ fun HomeScreen(onVideoTapped: (String) -> Unit = { }) {
         }
 
         when {
-            viewModel.finalizedSearchQuery != null && viewModel.finalizedSearchQuery!!.second.isEmpty() -> {
+            viewModel.finalizedSearchQuery != null && viewModel.finalizedSearchQuery!!.second.data.isEmpty() -> {
                 Text(
                     stringResource(id = R.string.homeScreen_no_results_found)
                 )
             }
 
-            viewModel.finalizedSearchQuery != null && viewModel.finalizedSearchQuery!!.second.isNotEmpty() -> {
+            viewModel.finalizedSearchQuery != null && viewModel.finalizedSearchQuery!!.second.data.isNotEmpty() -> {
                 LazyColumn {
-                    items(viewModel.finalizedSearchQuery!!.second) {
+                    items(viewModel.finalizedSearchQuery!!.second.data) {
                         RumbleSearchResult(rumbleSearchResult = it) {
-                            onVideoTapped(it.getVideoId())
+                            onVideoTapped(it.id)
                         }
                     }
                 }

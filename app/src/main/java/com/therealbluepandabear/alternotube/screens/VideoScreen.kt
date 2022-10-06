@@ -86,7 +86,7 @@ fun VideoScreen() {
             modifier = Modifier.padding(16.dp)
         ) {
             Text(
-                "\uD83D\uDEC0 Calm Music (No Copyright) \"Dawn\" by @Sappheiros \uD83C\uDDFA\uD83C\uDDF8",
+                viewModel.video?.data?.title ?: "",
                 style = MaterialTheme.typography.titleLarge
             )
 
@@ -95,7 +95,16 @@ fun VideoScreen() {
             )
 
             Text(
-                "BreakingCopyright — Royalty Free Music",
+                viewModel.video?.data?.channel?.name ?: "",
+                style = MaterialTheme.typography.titleSmall
+            )
+
+            Spacer(
+                Modifier.height(8.dp)
+            )
+
+            Text(
+                "${viewModel.video?.data?.rumbles} rumbles",
                 style = MaterialTheme.typography.titleSmall
             )
         }

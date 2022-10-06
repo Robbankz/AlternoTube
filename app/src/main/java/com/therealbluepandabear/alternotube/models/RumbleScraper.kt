@@ -1,5 +1,6 @@
 package com.therealbluepandabear.alternotube.models
 
+import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.JsonParser
 import org.jsoup.Jsoup
@@ -15,7 +16,9 @@ class RumbleScraper private constructor() {
         }
     }
 
-    fun scrapeSearchResults(query: String, page: Int = 1): List<RumbleSearchResult> {
+    fun scrapeSearchResults(query: String, page: Int = 1): JsoupResponse<List<RumbleSearchResult>> {
+        val exception: Exception?
+
         try {
             val searchResults = mutableListOf<RumbleSearchResult>()
 
@@ -23,7 +26,7 @@ class RumbleScraper private constructor() {
             val document = Jsoup.connect(url).get()
 
             if (document.getElementsByClass("video-listing-entry").size == 0) {
-                return emptyList()
+                return JsoupResponse(null, emptyList())
             } else {
                 for (element in document.getElementsByClass("video-listing-entry")) {
                     val searchResult = RumbleSearchResult("", RumbleChannel("", 0, false), 0, "", "")
@@ -63,16 +66,17 @@ class RumbleScraper private constructor() {
                     searchResults.add(searchResult)
                 }
 
-                return searchResults
+                return JsoupResponse(null, searchResults)
             }
-        } catch (exception: IOException) {
-            exception.printStackTrace()
+        } catch (e: IOException) {
+            e.printStackTrace()
+            exception = e
         }
 
-        return emptyList()
+        return JsoupResponse(exception, emptyList())
     }
 
-    fun scrapeVideoSource(id: String): JsoupResponse {
+    fun scrapeVideoSource(id: String): JsoupResponse<String?> {
         var exception: Exception? = null
 
         try {
@@ -102,6 +106,29 @@ class RumbleScraper private constructor() {
                     return JsoupResponse(null, mp4.replace("\"", ""))
                 }
             }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            exception = e
+        }
+
+        return JsoupResponse(exception, null)
+    }
+
+    fun scrapeVideoDetailsForId(id: String): JsoupResponse<RumbleVideo?> {
+        val exception: Exception?
+
+        try {
+            val document = Jsoup.connect("${RUMBLE_URL}$id").get()
+
+            val channel = RumbleChannel(null, 0, false)
+            val video = RumbleVideo("", channel, 0, 0)
+
+            channel.name = document.getElementsByClass("media-heading-name").first()?.text()
+            video.title = document.title()
+            video.rumbles = RumbleScraperUtils.convertShorthandNumberToInt(document.getElementsByClass("rumbles-vote").first()?.getElementsByClass("rumbles-count")?.first()?.text().toString())
+
+            Log.d("BEPPER", video.rumbles.toString())
+            return JsoupResponse(null, video)
         } catch (e: Exception) {
             e.printStackTrace()
             exception = e
