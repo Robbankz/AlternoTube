@@ -24,8 +24,10 @@ class HomeScreenViewModel : ViewModel() {
     }
 
     fun incrementCurrentPage() {
-        currentPage++
-        scrapeSearchResults(finalizedSearchQuery!!.first)
+        if (finalizedSearchQuery?.second?.data?.isNotEmpty() == true) {
+            currentPage++
+            scrapeSearchResults(finalizedSearchQuery!!.first)
+        }
     }
 
     fun decrementCurrentPage() {
