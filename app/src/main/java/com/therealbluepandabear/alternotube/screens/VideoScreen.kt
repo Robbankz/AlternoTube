@@ -2,13 +2,11 @@ package com.therealbluepandabear.alternotube.screens
 
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -39,8 +37,6 @@ fun VideoPlayer(videoSource: String) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(200.dp)
-            .background(Color.Blue),
     ) {
         DisposableEffect(key1 = Unit) {
             onDispose {
@@ -55,7 +51,7 @@ fun VideoPlayer(videoSource: String) {
                     layoutParams =
                         FrameLayout.LayoutParams(
                             ViewGroup.LayoutParams.MATCH_PARENT,
-                            ViewGroup.LayoutParams.MATCH_PARENT
+                            ViewGroup.LayoutParams.WRAP_CONTENT
                         )
                 }
             }
