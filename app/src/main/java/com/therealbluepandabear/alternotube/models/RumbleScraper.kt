@@ -45,21 +45,15 @@ class RumbleScraper private constructor() {
                     }
 
                     for (element2 in element.select("span.video-item--meta video-item--views")) {
-                        if (element2.attr("data-value") != "") {
-                            searchResult.views = element2.attr("data-value").toString().replace(",", "").toInt()
-                        }
+                        searchResult.views = element2.attr("data-value").toString().replace(",", "").toInt()
                     }
 
                     for (element2 in element.select("img.video-item--img")) {
-                        if (element2.attr("src") != "") {
-                            searchResult.thumbnailSrc = element2.attr("src").toString()
-                        }
+                        searchResult.thumbnailSrc = element2.attr("src").toString()
                     }
 
                     for (element2 in element.select("a.video-item--a")) {
-                        if (element2.attr("href") != "") {
-                            searchResult.videoUrl = "${RUMBLE_URL}${element2.attr("href")}"
-                        }
+                        searchResult.videoUrl = "${RUMBLE_URL}${element2.attr("href")}"
                     }
 
                     searchResults.add(searchResult)
@@ -128,10 +122,8 @@ class RumbleScraper private constructor() {
             video.title = document.title()
             video.rumbles = RumbleScraperUtils.convertShorthandNumberToInt(document.select("div.rumbles-vote").first()?.select("span.rumbles-count")?.first()?.text().toString())
 
-            if (document.select("p.media-description").isNotEmpty()) {
-                for (element in document.select("p.media-description")) {
-                    video.description += "${element.text()}\n"
-                }
+            for (element in document.select("p.media-description")) {
+                video.description += "${element.text()}\n"
             }
 
             return JsoupResponse(null, video)
