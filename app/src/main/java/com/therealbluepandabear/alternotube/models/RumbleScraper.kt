@@ -123,6 +123,8 @@ class RumbleScraper private constructor() {
             val video = RumbleVideo("", channel, 0, 0)
 
             channel.name = document.getElementsByClass("media-heading-name").first()?.text()
+            channel.isVerified = document.getElementsByClass("verification-badge-icon media-heading-verified").isNotEmpty()
+
             video.title = document.title()
             video.rumbles = RumbleScraperUtils.convertShorthandNumberToInt(document.getElementsByClass("rumbles-vote").first()?.getElementsByClass("rumbles-count")?.first()?.text().toString())
 

@@ -8,5 +8,7 @@ data class RumbleSearchResult(
     var videoUrl: String
 ) {
     val id: String
-        get() = videoUrl.substring(20).substring(0, videoUrl.substring(20).indexOf("-"))
+        get() {
+            return videoUrl.substring(20).substring(0, videoUrl.substring(20).indexOf("-"))
+        }
 }

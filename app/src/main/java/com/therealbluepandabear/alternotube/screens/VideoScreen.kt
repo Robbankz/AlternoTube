@@ -3,11 +3,15 @@ package com.therealbluepandabear.alternotube.screens
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.google.android.exoplayer2.ExoPlayer
@@ -90,10 +94,26 @@ fun VideoScreen() {
                 Modifier.height(8.dp)
             )
 
-            Text(
-                viewModel.video?.data?.channel?.name ?: "",
-                style = MaterialTheme.typography.titleSmall
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    viewModel.video?.data?.channel?.name ?: "",
+                    style = MaterialTheme.typography.titleSmall
+                )
+
+                if (viewModel.video?.data?.channel?.isVerified == true) {
+                    Spacer(
+                        Modifier.width(8.dp)
+                    )
+
+                    Icon(
+                        painter = painterResource(R.drawable.ic_baseline_verified_24),
+                        tint = Color.Cyan,
+                        contentDescription = stringResource(id = R.string.homeScreen_verified_content_description)
+                    )
+                }
+            }
 
             Spacer(
                 Modifier.height(8.dp)
