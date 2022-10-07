@@ -118,7 +118,7 @@ fun HomeScreen(onVideoTapped: (String) -> Unit = { }) {
 
             viewModel.finalizedSearchQuery != null && viewModel.finalizedSearchQuery!!.second.data.isEmpty() && viewModel.finalizedSearchQuery!!.second.exception != null -> {
                 Text(
-                    "Failed to load search results, encountered ${viewModel.finalizedSearchQuery!!.second.exception}"
+                    stringResource(id = R.string.homeScreen_failed_to_load_search_results, viewModel.finalizedSearchQuery!!.second.exception!!)
                 )
             }
 

@@ -6,6 +6,7 @@
     <string name="homeScreen_no_results_found">No results found</string>
     <string name="homeScreen_next_page">Next page</string>
     <string name="homeScreen_previous_page">Previous page</string>
+    <string name="homeScreen_failed_to_load_search_results">Failed to load search results, encountered %1$s</string>
 
     <string name="videoScreen_failed_to_play_video">Failed to play video, encountered %1$s</string>
 </resources>
