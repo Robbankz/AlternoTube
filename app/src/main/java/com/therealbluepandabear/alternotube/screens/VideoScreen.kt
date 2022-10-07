@@ -3,8 +3,8 @@ package com.therealbluepandabear.alternotube.screens
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -24,6 +24,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.therealbluepandabear.alternotube.R
 import com.therealbluepandabear.alternotube.viewmodels.VideoScreenViewModel
+import de.charlex.compose.HtmlText
 
 @Composable
 fun VideoPlayer(videoSource: String) {
@@ -131,13 +132,13 @@ fun VideoScreen() {
                 Modifier.padding(0.dp, 16.dp, 0.dp, 16.dp)
             )
 
-            val descriptionData = viewModel.video?.data?.description?.split("\n") ?: emptyList()
+            val scrollState = rememberScrollState(0)
+            val descriptionData = viewModel.video?.data?.descriptionHTML ?: ""
 
-            LazyColumn {
-                items(descriptionData) {
-                    Text("$it\r\n")
-                }
-            }
+            HtmlText(
+                text = descriptionData,
+                modifier = Modifier.verticalScroll(scrollState)
+            )
         }
     }
 }
