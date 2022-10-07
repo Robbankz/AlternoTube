@@ -4,5 +4,6 @@ data class RumbleVideo(
     var title: String,
     var channel: RumbleChannel,
     var views: Int,
-    var rumbles: Int
+    var rumbles: Int,
+    var description: String,
 )

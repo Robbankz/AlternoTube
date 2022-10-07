@@ -120,13 +120,19 @@ class RumbleScraper private constructor() {
             val document = Jsoup.connect("${RUMBLE_URL}$id").get()
 
             val channel = RumbleChannel(null, 0, false)
-            val video = RumbleVideo("", channel, 0, 0)
+            val video = RumbleVideo("", channel, 0, 0, "")
 
             channel.name = document.getElementsByClass("media-heading-name").first()?.text()
             channel.isVerified = document.getElementsByClass("verification-badge-icon media-heading-verified").isNotEmpty()
 
             video.title = document.title()
             video.rumbles = RumbleScraperUtils.convertShorthandNumberToInt(document.getElementsByClass("rumbles-vote").first()?.getElementsByClass("rumbles-count")?.first()?.text().toString())
+
+            if (document.getElementsByClass("media-description").isNotEmpty()) {
+                for (element in document.getElementsByClass("media-description")) {
+                    video.description += "${element.text()}\n"
+                }
+            }
 
             return JsoupResponse(null, video)
         } catch (e: Exception) {

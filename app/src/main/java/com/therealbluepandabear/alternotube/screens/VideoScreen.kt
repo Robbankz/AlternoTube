@@ -3,6 +3,9 @@ package com.therealbluepandabear.alternotube.screens
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -123,6 +126,18 @@ fun VideoScreen() {
                 "${viewModel.video?.data?.rumbles} rumbles",
                 style = MaterialTheme.typography.titleSmall
             )
+
+            Divider(
+                Modifier.padding(0.dp, 16.dp, 0.dp, 16.dp)
+            )
+
+            val descriptionData = viewModel.video?.data?.description?.split("\n") ?: emptyList()
+
+            LazyColumn {
+                items(descriptionData) {
+                    Text("$it\r\n")
+                }
+            }
         }
     }
 }
