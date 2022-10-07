@@ -104,7 +104,7 @@ fun VideoScreen() {
 
                 if (viewModel.video?.data?.channel?.isVerified == true) {
                     Spacer(
-                        Modifier.width(8.dp)
+                        Modifier.width(4.dp)
                     )
 
                     Icon(
