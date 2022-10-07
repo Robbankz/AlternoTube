@@ -136,7 +136,7 @@ fun HomeScreen(onVideoTapped: (String) -> Unit = { }) {
                 },
             ) {
                 Text(
-                    "Previous page"
+                    stringResource(id = R.string.homeScreen_previous_page)
                 )
             }
 
@@ -146,7 +146,7 @@ fun HomeScreen(onVideoTapped: (String) -> Unit = { }) {
                 },
             ) {
                 Text(
-                    "Next page"
+                    stringResource(id = R.string.homeScreen_next_page)
                 )
             }
         }
