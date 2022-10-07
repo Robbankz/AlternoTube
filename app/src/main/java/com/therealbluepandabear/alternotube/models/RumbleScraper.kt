@@ -38,13 +38,13 @@ class RumbleScraper private constructor() {
                         for (element3 in element2.select("div.ellipsis-1")) {
                             searchResult.channel.name = element3.text()
 
-                            if (element3.select("svg.video-item--by-verified verification-badge-icon").isNotEmpty()) {
+                            if (element3.select("svg.video-item--by-verified.verification-badge-icon").isNotEmpty()) {
                                 searchResult.channel.isVerified = true
                             }
                         }
                     }
 
-                    for (element2 in element.select("span.video-item--meta video-item--views")) {
+                    for (element2 in element.select("span.video-item--meta.video-item--views")) {
                         searchResult.views = element2.attr("data-value").toString().replace(",", "").toInt()
                     }
 
@@ -117,13 +117,13 @@ class RumbleScraper private constructor() {
             val video = RumbleVideo("", channel, 0, 0, "")
 
             channel.name = document.select("span.media-heading-name").first()?.text()
-            channel.isVerified = document.select("svg.verification-badge-icon media-heading-verified").isNotEmpty()
+            channel.isVerified = document.select("svg.verification-badge-icon.media-heading-verified").isNotEmpty()
 
             video.title = document.title()
             video.rumbles = RumbleScraperUtils.convertShorthandNumberToInt(document.select("div.rumbles-vote").first()?.select("span.rumbles-count")?.first()?.text().toString())
 
-            for (element in document.select("p.media-description")) {
-                video.description += "${element.text()}\n"
+            for (element in document.select("div.media-description")) {
+                video.descriptionHTML += element
             }
 
             return JsoupResponse(null, video)
