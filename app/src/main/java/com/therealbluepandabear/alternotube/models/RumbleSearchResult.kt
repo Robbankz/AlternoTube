@@ -9,6 +9,6 @@ data class RumbleSearchResult(
 ) {
     val id: String
         get() {
-            return videoUrl.substring(20).substring(0, videoUrl.substring(20).indexOf("-"))
+            return videoUrl.substring(20, videoUrl.indexOf("-"))
         }
 }
