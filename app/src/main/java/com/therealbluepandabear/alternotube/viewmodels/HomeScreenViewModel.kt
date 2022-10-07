@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 
 class HomeScreenViewModel : ViewModel() {
     private val rumbleScraper = RumbleScraper.create()
-    private var currentPage: Int = 0
+    private var currentPage: Int = 1
 
     var finalizedSearchQuery: Pair<String, JsoupResponse<List<RumbleSearchResult>>>? by mutableStateOf(null)
 
