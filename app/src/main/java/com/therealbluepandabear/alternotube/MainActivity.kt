@@ -15,6 +15,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.therealbluepandabear.alternotube.models.StringConstants
 import com.therealbluepandabear.alternotube.screens.HomeScreen
 import com.therealbluepandabear.alternotube.screens.VideoScreen
 import com.therealbluepandabear.alternotube.ui.theme.AlternoTubeTheme
@@ -63,8 +64,8 @@ class MainActivity : ComponentActivity() {
             }
 
             composable(
-                route = "home/{videoId}",
-                arguments = listOf(navArgument("videoId") {
+                route = "home/{${StringConstants.NAV_ARGS_VIDEO_ID}}",
+                arguments = listOf(navArgument(StringConstants.NAV_ARGS_VIDEO_ID) {
                     type = NavType.StringType
                 })
             ) {

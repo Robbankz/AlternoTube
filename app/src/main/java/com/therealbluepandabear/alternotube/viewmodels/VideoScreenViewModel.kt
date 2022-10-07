@@ -11,6 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import androidx.compose.runtime.setValue
 import com.therealbluepandabear.alternotube.models.RumbleVideo
+import com.therealbluepandabear.alternotube.models.StringConstants
 
 
 class VideoScreenViewModel(stateHandle: SavedStateHandle) : ViewModel() {
@@ -21,7 +22,7 @@ class VideoScreenViewModel(stateHandle: SavedStateHandle) : ViewModel() {
     var video: JsoupResponse<RumbleVideo?>? by mutableStateOf(null)
 
     init {
-        val id = stateHandle.get<String>("videoId") ?: ""
+        val id = stateHandle.get<String>(StringConstants.NAV_ARGS_VIDEO_ID) ?: ""
 
         scrapeVideoSource(id)
         scrapeVideoDetailsForId(id)
