@@ -13,12 +13,29 @@ import kotlinx.coroutines.launch
 
 class HomeScreenViewModel : ViewModel() {
     private val rumbleScraper = RumbleScraper.create()
+    private var currentPage: Int = 0
 
     var finalizedSearchQuery: Pair<String, JsoupResponse<List<RumbleSearchResult>>>? by mutableStateOf(null)
 
     fun scrapeSearchResults(query: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            finalizedSearchQuery = Pair(query, rumbleScraper.scrpSearchResults(query))
+            finalizedSearchQuery = Pair(query, rumbleScraper.scrpSearchResults(query, currentPage))
         }
+    }
+
+    fun incrementCurrentPage() {
+        currentPage++
+        scrapeSearchResults(finalizedSearchQuery!!.first)
+    }
+
+    fun decrementCurrentPage() {
+        if (currentPage > 1) {
+            currentPage--
+            scrapeSearchResults(finalizedSearchQuery!!.first)
+        }
+    }
+
+    fun resetCurrentPage() {
+        currentPage = 1
     }
 }

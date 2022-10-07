@@ -97,6 +97,7 @@ fun HomeScreen(onVideoTapped: (String) -> Unit = { }) {
             Button(
                 onClick = {
                     if (query.isNotBlank()) {
+                        viewModel.resetCurrentPage()
                         viewModel.scrapeSearchResults(query)
                         keyboardController?.hide()
                     }
@@ -116,13 +117,37 @@ fun HomeScreen(onVideoTapped: (String) -> Unit = { }) {
             }
 
             viewModel.finalizedSearchQuery != null && viewModel.finalizedSearchQuery!!.second.data.isNotEmpty() -> {
-                LazyColumn {
+                LazyColumn(
+                    modifier = Modifier.weight(1f),
+                ) {
                     items(viewModel.finalizedSearchQuery!!.second.data) {
                         RumbleSearchResult(rumbleSearchResult = it) {
                             onVideoTapped(it.id)
                         }
                     }
                 }
+            }
+        }
+
+        Row {
+            Button(
+                onClick = {
+                    viewModel.decrementCurrentPage()
+                },
+            ) {
+                Text(
+                    "Previous page"
+                )
+            }
+
+            Button(
+                onClick = {
+                    viewModel.incrementCurrentPage()
+                },
+            ) {
+                Text(
+                    "Next page"
+                )
             }
         }
     }
