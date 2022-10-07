@@ -17,7 +17,7 @@ object RumbleScraperUtils {
             'K' -> 1_000
             'M' -> 1_000_000
             'B' -> 1_000_000_000
-            else -> 0
+            else -> return shorthandNumber.toInt()
         }
 
         val chunk1 = if (shorthandNumber.contains('.')) {
