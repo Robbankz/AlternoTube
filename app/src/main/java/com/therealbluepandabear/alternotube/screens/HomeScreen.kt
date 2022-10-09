@@ -108,10 +108,10 @@ fun Category(category: RumbleCategory) {
         items(viewModel.categoryVideos[category] ?: emptyList()) {
             ElevatedCard(
                 modifier = Modifier
+                    .padding(8.dp)
                     .clickable {
 
                     }
-                    .padding(8.dp)
                     .width(300.dp)
             ) {
                 Column {
