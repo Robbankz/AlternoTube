@@ -2,167 +2,206 @@ package com.therealbluepandabear.alternotube.screens
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
+import com.therealbluepandabear.alternotube.R
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
+import com.therealbluepandabear.alternotube.models.RumbleCategory
 import com.therealbluepandabear.alternotube.viewmodels.HomeScreenViewModel
-import com.therealbluepandabear.alternotube.R
-import com.therealbluepandabear.alternotube.models.RumbleSearchResult
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RumbleSearchResult(rumbleSearchResult: RumbleSearchResult, onClick: () -> Unit) {
-    ListItem(
-        headlineText = {
-            Text(rumbleSearchResult.title)
-        },
+private fun EditorPicks() {
+    val viewModel: HomeScreenViewModel = viewModel()
 
-        supportingText = {
-            rumbleSearchResult.channel.let { creator ->
-                val text = when {
-                    rumbleSearchResult.views > 0 -> {
-                        "${creator.name}, ${rumbleSearchResult.views} views"
-                    }
+    Text(
+        stringResource(id = R.string.homeScreen_editorPicks).uppercase(),
+        style = MaterialTheme.typography.labelMedium,
+        modifier = Modifier.padding(8.dp),
+    )
 
-                    else -> {
-                        creator.name ?: ""
-                    }
-                }
+    ElevatedCard(
+        modifier = Modifier
+            .padding(8.dp)
+            .clickable {
 
-                Row {
-                    Text(text)
+            }
+    ) {
+        Column {
+            AsyncImage(
+                viewModel.topVideo?.thumbnailSrc,
+                contentDescription = null,
+                modifier = Modifier.fillMaxWidth()
+            )
 
-                    if (creator.isVerified) {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_baseline_verified_24),
-                            tint = Color.Cyan,
-                            contentDescription = stringResource(id = R.string.homeScreen_verified_content_description)
+            Column(
+                modifier = Modifier.padding(16.dp)
+            ) {
+                Text(
+                    viewModel.topVideo?.title ?: "",
+                    style = MaterialTheme.typography.headlineMedium
+                )
+
+                Spacer(
+                    Modifier.height(8.dp)
+                )
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    AsyncImage(
+                        viewModel.topVideo?.channel?.profileImageSrc,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(35.dp, 35.dp)
+                            .clip(CircleShape)
+                    )
+
+                    Spacer(
+                        Modifier.width(8.dp)
+                    )
+
+                    Column {
+                        Text(
+                            viewModel.topVideo?.channel?.name ?: "",
+                            style = MaterialTheme.typography.titleSmall,
+                            fontWeight = FontWeight.Bold
+                        )
+
+                        if (viewModel.topVideo?.views != null) {
+                            Text(
+                                "${viewModel.topVideo?.views.toString()} views",
+                                style = MaterialTheme.typography.titleSmall
+                            )
+                        }
+
+                        Text(
+                            viewModel.topVideo?.uploadDate ?: "",
+                            style = MaterialTheme.typography.titleSmall
                         )
                     }
                 }
             }
-        },
-
-        leadingContent = {
-            AsyncImage(
-                rumbleSearchResult.thumbnailSrc,
-                contentDescription = null,
-                modifier = Modifier.size(100.dp, 100.dp)
-            )
-        },
-
-        modifier = Modifier.clickable {
-            onClick.invoke()
         }
-    )
-    Divider()
+    }
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
-fun HomeScreen(onVideoTapped: (String) -> Unit = { }) {
+fun Category(category: RumbleCategory) {
     val viewModel: HomeScreenViewModel = viewModel()
-    val keyboardController = LocalSoftwareKeyboardController.current
 
-    var query: String by rememberSaveable { mutableStateOf("") }
+    LazyRow {
+        items(viewModel.categoryVideos[category] ?: emptyList()) {
+            ElevatedCard(
+                modifier = Modifier
+                    .clickable {
 
-    Column(
-        modifier = Modifier
-            .padding(16.dp)
-    ) {
-        Row(
-            modifier = Modifier.wrapContentSize()
-        ) {
-            OutlinedTextField(
-                value = query,
-                onValueChange = { query = it },
-                label = {
-                    Text(
-                        stringResource(id = R.string.homeScreen_search)
-                    )
-                },
-                leadingIcon = {
-                    Icon(
-                        Icons.Default.Search,
-                        contentDescription = "Search"
-                    )
-                },
-            )
-
-            Button(
-                onClick = {
-                    if (query.isNotBlank()) {
-                        viewModel.resetCurrentPage()
-                        viewModel.scrapeSearchResults(query)
-                        keyboardController?.hide()
                     }
-                },
+                    .padding(8.dp)
+                    .width(300.dp)
             ) {
-                Text(
-                    stringResource(id = R.string.homeScreen_search)
-                )
-            }
-        }
+                Column {
+                    AsyncImage(
+                        it.thumbnailSrc,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .width(300.dp)
+                            .wrapContentHeight()
+                    )
 
-        when {
-            viewModel.finalizedSearchQuery != null && viewModel.finalizedSearchQuery!!.second.data.isEmpty() && viewModel.finalizedSearchQuery!!.second.exception == null -> {
-                Text(
-                    stringResource(id = R.string.homeScreen_no_results_found)
-                )
-            }
+                    Column(
+                        modifier = Modifier.padding(16.dp)
+                    ) {
+                        Text(
+                            it.title ?: "",
+                            style = MaterialTheme.typography.titleSmall,
+                            fontWeight = FontWeight.Bold,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
 
-            viewModel.finalizedSearchQuery != null && viewModel.finalizedSearchQuery!!.second.data.isEmpty() && viewModel.finalizedSearchQuery!!.second.exception != null -> {
-                Text(
-                    stringResource(id = R.string.homeScreen_failed_to_load_search_results, viewModel.finalizedSearchQuery!!.second.exception!!)
-                )
-            }
+                        Spacer(
+                            Modifier.height(8.dp)
+                        )
 
-            viewModel.finalizedSearchQuery != null && viewModel.finalizedSearchQuery!!.second.data.isNotEmpty() -> {
-                LazyColumn(
-                    modifier = Modifier.weight(1f),
-                ) {
-                    items(viewModel.finalizedSearchQuery!!.second.data) {
-                        RumbleSearchResult(rumbleSearchResult = it) {
-                            onVideoTapped(it.id)
-                        }
+                        Text(
+                            it.channel?.name ?: "",
+                            style = MaterialTheme.typography.titleSmall,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
                     }
                 }
             }
         }
+    }
+}
 
-        Row {
-            Button(
-                onClick = {
-                    viewModel.decrementCurrentPage()
-                },
-            ) {
-                Text(
-                    stringResource(id = R.string.homeScreen_previous_page)
-                )
-            }
+@Composable
+fun CategoryLabel(category: RumbleCategory) {
+    val stringResource = when(category) {
+        RumbleCategory.News -> {
+            stringResource(id = R.string.homeScreen_news)
+        }
 
-            Button(
-                onClick = {
-                    viewModel.incrementCurrentPage()
-                },
-            ) {
-                Text(
-                    stringResource(id = R.string.homeScreen_next_page)
-                )
+        RumbleCategory.Viral -> {
+            stringResource(id = R.string.homeScreen_viral)
+        }
+
+        RumbleCategory.Finance -> {
+            stringResource(id = R.string.homeScreen_finance)
+        }
+
+        else -> {
+            stringResource(id = R.string.homeScreen_podcasts)
+        }
+    }
+
+    Text(
+        stringResource.uppercase(),
+        style = MaterialTheme.typography.labelMedium,
+        modifier = Modifier.padding(8.dp, 16.dp, 8.dp, 0.dp),
+    )
+}
+
+@Composable
+fun HomeScreen(onSearchTapped: () -> Unit) {
+    Box {
+        Column(
+            modifier = Modifier
+                .verticalScroll(rememberScrollState())
+                .height(1700.dp)
+        ) {
+
+            EditorPicks()
+
+            for (category in RumbleCategory.values()) {
+                CategoryLabel(category)
+                Category(category)
             }
+        }
+
+        FloatingActionButton(
+            onClick = {
+                onSearchTapped()
+            },
+            modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp)
+        ) {
+            Icon(Icons.Filled.Search, "Search")
         }
     }
 }

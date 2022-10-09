@@ -114,7 +114,7 @@ fun VideoScreen() {
                     Icon(
                         painter = painterResource(R.drawable.ic_baseline_verified_24),
                         tint = Color.Cyan,
-                        contentDescription = stringResource(id = R.string.homeScreen_verified_content_description)
+                        contentDescription = stringResource(id = R.string.searchScreen_verified_content_description)
                     )
                 }
             }

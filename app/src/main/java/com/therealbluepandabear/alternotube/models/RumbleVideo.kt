@@ -1,9 +1,11 @@
 package com.therealbluepandabear.alternotube.models
 
 data class RumbleVideo(
-    var title: String,
-    var channel: RumbleChannel,
-    var views: Int,
-    var rumbles: Int,
-    var descriptionHTML: String,
+    var title: String? = null,
+    var channel: RumbleChannel? = null,
+    var thumbnailSrc: String? = null,
+    var views: Int? = null,
+    var rumbles: Int? = null,
+    var uploadDate: String? = null,
+    var descriptionHTML: String? = null,
 )

@@ -17,6 +17,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.therealbluepandabear.alternotube.models.StringConstants
 import com.therealbluepandabear.alternotube.screens.HomeScreen
+import com.therealbluepandabear.alternotube.screens.SearchScreen
 import com.therealbluepandabear.alternotube.screens.VideoScreen
 import com.therealbluepandabear.alternotube.ui.theme.AlternoTubeTheme
 
@@ -33,7 +34,7 @@ class MainActivity : ComponentActivity() {
                 ) {
                     Scaffold(
                         topBar = {
-                            TopAppBar(
+                            CenterAlignedTopAppBar(
                                 title = {
                                     Text(
                                         stringResource(id = R.string.app_name),
@@ -58,13 +59,19 @@ class MainActivity : ComponentActivity() {
 
         NavHost(navController, startDestination = "home", modifier = modifier) {
             composable(route = "home") {
-                HomeScreen { videoId ->
-                    navController.navigate("home/${videoId}")
+                HomeScreen {
+                    navController.navigate("home/search")
+                }
+            }
+
+            composable(route = "home/search") {
+                SearchScreen { videoId ->
+                    navController.navigate("home/watch/${videoId}")
                 }
             }
 
             composable(
-                route = "home/{${StringConstants.NAV_ARGS_VIDEO_ID}}",
+                route = "home/watch/{${StringConstants.NAV_ARGS_VIDEO_ID}}",
                 arguments = listOf(navArgument(StringConstants.NAV_ARGS_VIDEO_ID) {
                     type = NavType.StringType
                 })

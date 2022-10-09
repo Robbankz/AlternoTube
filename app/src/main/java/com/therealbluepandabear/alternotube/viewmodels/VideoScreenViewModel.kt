@@ -30,13 +30,13 @@ class VideoScreenViewModel(stateHandle: SavedStateHandle) : ViewModel() {
 
     private fun scrapeVideoSource(id: String) {
         viewModelScope.launch(dispatcher) {
-            videoSource = rumbleScraper.scrpVideoSource(id)
+            videoSource = rumbleScraper.scrapeVideoSource(id)
         }
     }
 
     private fun scrapeVideoDetailsForId(id: String) {
         viewModelScope.launch(dispatcher) {
-            video = rumbleScraper.scrpVideoDetails(id)
+            video = rumbleScraper.scrapeVideoDetails(id)
         }
     }
 }
