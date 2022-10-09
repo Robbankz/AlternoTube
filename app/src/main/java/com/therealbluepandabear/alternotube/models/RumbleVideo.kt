@@ -8,4 +8,11 @@ data class RumbleVideo(
     var rumbles: Int? = null,
     var uploadDate: String? = null,
     var descriptionHTML: String? = null,
-)
+    var videoUrl: String? = null
+) {
+
+    val id: String?
+        get() {
+            return if (videoUrl != null) videoUrl!!.substring(20, videoUrl!!.indexOf("-")) else null
+        }
+}

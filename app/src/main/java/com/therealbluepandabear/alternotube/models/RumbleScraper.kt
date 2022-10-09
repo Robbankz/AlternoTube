@@ -222,6 +222,11 @@ class RumbleScraper private constructor() {
                 }
                 video.thumbnailSrc = element.select("img.mediaList-image").attr("src")
                 video.channel?.name = element.select("h4.mediaList-by-heading").first()?.text().toString()
+                video.videoUrl = RUMBLE_URL + if (index == 0) {
+                    element.select("a.mediaList-link.size-large").first()?.attr("href")
+                } else {
+                    element.select("a.mediaList-link.size-small").first()?.attr("href")
+                }
 
                 videos.add(video)
             }

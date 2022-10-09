@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.therealbluepandabear.alternotube.models.RumbleCategory
+import com.therealbluepandabear.alternotube.models.RumbleVideo
 import com.therealbluepandabear.alternotube.viewmodels.HomeScreenViewModel
 
 @Composable
@@ -101,7 +102,10 @@ private fun EditorPicks() {
 }
 
 @Composable
-fun Category(category: RumbleCategory) {
+fun Category(
+    category: RumbleCategory,
+    onVideoTapped: (RumbleVideo) -> Unit
+) {
     val viewModel: HomeScreenViewModel = viewModel()
 
     LazyRow {
@@ -109,10 +113,10 @@ fun Category(category: RumbleCategory) {
             ElevatedCard(
                 modifier = Modifier
                     .padding(8.dp)
-                    .clickable {
-
-                    }
                     .width(300.dp)
+                    .clickable {
+                        onVideoTapped(it)
+                    }
             ) {
                 Column {
                     AsyncImage(
@@ -179,7 +183,28 @@ fun CategoryLabel(category: RumbleCategory) {
 }
 
 @Composable
-fun HomeScreen(onSearchTapped: () -> Unit) {
+fun SearchButton(
+    modifier: Modifier,
+    onSearchTapped: () -> Unit
+) {
+    FloatingActionButton(
+        onClick = {
+            onSearchTapped()
+        },
+        modifier = modifier
+    ) {
+        Icon(
+            Icons.Filled.Search,
+            stringResource(id = R.string.homeScreen_search_content_description)
+        )
+    }
+}
+
+@Composable
+fun HomeScreen(
+    onSearchTapped: () -> Unit,
+    onVideoTapped: (String) -> Unit
+) {
     Box {
         Column(
             modifier = Modifier
@@ -191,19 +216,20 @@ fun HomeScreen(onSearchTapped: () -> Unit) {
 
             for (category in RumbleCategory.values()) {
                 CategoryLabel(category)
-                Category(category)
+                Category(category) {
+                    if (it.id != null) {
+                        onVideoTapped.invoke(it.id!!)
+                    }
+                }
             }
         }
 
-        FloatingActionButton(
-            onClick = {
-                onSearchTapped()
-            },
-            modifier = Modifier
+        SearchButton(
+            Modifier
                 .align(Alignment.BottomEnd)
                 .padding(16.dp)
         ) {
-            Icon(Icons.Filled.Search, stringResource(id = R.string.homeScreen_search_content_description))
+            onSearchTapped()
         }
     }
 }

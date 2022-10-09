@@ -59,9 +59,14 @@ class MainActivity : ComponentActivity() {
 
         NavHost(navController, startDestination = "home", modifier = modifier) {
             composable(route = "home") {
-                HomeScreen {
-                    navController.navigate("home/search")
-                }
+                HomeScreen(
+                    onSearchTapped = {
+                        navController.navigate("home/search")
+                    },
+                    onVideoTapped = { videoId ->
+                        navController.navigate("home/watch/${videoId}")
+                    }
+                )
             }
 
             composable(route = "home/search") {

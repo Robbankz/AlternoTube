@@ -24,7 +24,7 @@ import com.therealbluepandabear.alternotube.models.RumbleSearchResult
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RumbleSearchResult(rumbleSearchResult: RumbleSearchResult, onClick: () -> Unit) {
+fun RumbleSearchResult(rumbleSearchResult: RumbleSearchResult, onVideoTapped: () -> Unit) {
     ListItem(
         headlineText = {
             Text(rumbleSearchResult.title)
@@ -65,7 +65,7 @@ fun RumbleSearchResult(rumbleSearchResult: RumbleSearchResult, onClick: () -> Un
         },
 
         modifier = Modifier.clickable {
-            onClick.invoke()
+            onVideoTapped.invoke()
         }
     )
     Divider()
@@ -73,7 +73,7 @@ fun RumbleSearchResult(rumbleSearchResult: RumbleSearchResult, onClick: () -> Un
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
-fun SearchScreen(onVideoTapped: (String) -> Unit = { }) {
+fun SearchScreen(onVideoTapped: (String) -> Unit) {
     val viewModel: SearchScreenViewModel = viewModel()
     val keyboardController = LocalSoftwareKeyboardController.current
 
