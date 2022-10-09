@@ -22,16 +22,14 @@ class RumbleScraper private constructor() {
         try {
             val searchResults = mutableListOf<RumbleSearchResult>()
 
-            val url =
-                if (page <= 1) "${RUMBLE_URL}search/video?q=$query" else "${RUMBLE_URL}search/video?q=$query&page=$page"
+            val url = if (page <= 1) "${RUMBLE_URL}search/video?q=$query" else "${RUMBLE_URL}search/video?q=$query&page=$page"
             val document = Jsoup.connect(url).get()
 
             if (document.select("li.video-listing-entry").size == 0) {
                 return JsoupResponse(null, emptyList())
             } else {
                 for (element in document.select("li.video-listing-entry")) {
-                    val searchResult =
-                        RumbleSearchResult("", RumbleChannel("", 0, false), 0, "", "")
+                    val searchResult = RumbleSearchResult("", RumbleChannel("", 0, false), 0, "", "")
 
                     for (element2 in element.select("h3.video-item--title")) {
                         searchResult.title = element2.text()
@@ -41,7 +39,7 @@ class RumbleScraper private constructor() {
                         for (element3 in element2.select("div.ellipsis-1")) {
                             searchResult.channel.name = element3.text()
 
-                            if (element3.select("svg.video-item--by-verified.verification-badge-icon")
+                            if (element3.select("svg.video-item--by-verified verification-badge-icon")
                                     .isNotEmpty()
                             ) {
                                 searchResult.channel.isVerified = true
@@ -130,14 +128,14 @@ class RumbleScraper private constructor() {
             val video = RumbleVideo()
 
             channel.name = document.select("span.media-heading-name").first()?.text()
-            channel.isVerified =
-                document.select("svg.verification-badge-icon.media-heading-verified").isNotEmpty()
+            channel.isVerified = document.select("svg.verification-badge-icon.media-heading-verified").isNotEmpty()
 
             video.title = document.title()
             video.rumbles = RumbleScraperUtils.convertShorthandNumberToInt(
-                document.select("div.rumbles-vote").first()?.select("span.rumbles-count")?.first()
-                    ?.text().toString()
+                document.select("div.rumbles-vote").first()?.select("span.rumbles-count")?.first()?.text().toString()
             )
+
+            video.channel = channel
 
             for (element in document.select("div.media-description")) {
                 video.descriptionHTML += element
