@@ -199,9 +199,11 @@ fun HomeScreen(onSearchTapped: () -> Unit) {
             onClick = {
                 onSearchTapped()
             },
-            modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp)
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(16.dp)
         ) {
-            Icon(Icons.Filled.Search, "Search")
+            Icon(Icons.Filled.Search, stringResource(id = R.string.homeScreen_search_content_description))
         }
     }
 }

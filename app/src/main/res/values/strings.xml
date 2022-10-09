@@ -6,6 +6,7 @@
     <string name="homeScreen_viral">Viral</string>
     <string name="homeScreen_finance">Finance</string>
     <string name="homeScreen_podcasts">Podcasts</string>
+    <string name="homeScreen_search_content_description">Search</string>
 
     <string name="searchScreen_verified_content_description">Verified</string>
     <string name="searchScreen_search">Search</string>
