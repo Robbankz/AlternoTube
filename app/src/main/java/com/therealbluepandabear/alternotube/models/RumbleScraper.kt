@@ -3,7 +3,6 @@ package com.therealbluepandabear.alternotube.models
 import com.google.gson.Gson
 import com.google.gson.JsonParser
 import org.jsoup.Jsoup
-import java.io.IOException
 import java.util.regex.Pattern
 
 class RumbleScraper private constructor() {
@@ -65,12 +64,12 @@ class RumbleScraper private constructor() {
 
                 return JsoupResponse(null, searchResults)
             }
-        } catch (e: IOException) {
+        } catch (e: Exception) {
             e.printStackTrace()
             exception = e
         }
 
-        return JsoupResponse(exception, emptyList())
+        return JsoupResponse(exception, null)
     }
 
     fun scrapeVideoSource(id: String): JsoupResponse<String?> {

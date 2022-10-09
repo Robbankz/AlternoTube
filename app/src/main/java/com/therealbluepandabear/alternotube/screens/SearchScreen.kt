@@ -119,21 +119,29 @@ fun SearchScreen(onVideoTapped: (String) -> Unit) {
         }
 
         viewModel.jsoupResponseScrapeSearchResults?.let {
-            if (it.message == StringConstants.JSOUP_RESPONSE_NO_RESULTS_FOUND) {
-                Text(
-                    stringResource(id = R.string.searchScreen_no_results_found)
-                )
-            } else if (it.exception != null) {
-                Text(
-                    stringResource(id = R.string.searchScreen_failed_to_load_search_results, it.exception)
-                )
-            } else {
-                LazyColumn(
-                    modifier = Modifier.weight(1f),
-                ) {
-                    items(viewModel.finalizedSearchQuery?.second ?: emptyList()) { rumbleSearchResult ->
-                        RumbleSearchResult(rumbleSearchResult = rumbleSearchResult) {
-                            onVideoTapped(rumbleSearchResult.id)
+            when (it.message) {
+                StringConstants.JSOUP_RESPONSE_NO_RESULTS_FOUND -> {
+                    Text(
+                        stringResource(id = R.string.searchScreen_no_results_found)
+                    )
+                }
+
+                StringConstants.JSOUP_RESPONSE_FAILURE -> {
+                    it.exception?.let { exception ->
+                        Text(
+                            stringResource(id = R.string.searchScreen_failed_to_load_search_results, exception)
+                        )
+                    }
+                }
+
+                else -> {
+                    LazyColumn(
+                        modifier = Modifier.weight(1f),
+                    ) {
+                        items(viewModel.finalizedSearchQuery?.second ?: emptyList()) { rumbleSearchResult ->
+                            RumbleSearchResult(rumbleSearchResult = rumbleSearchResult) {
+                                onVideoTapped(rumbleSearchResult.id)
+                            }
                         }
                     }
                 }
