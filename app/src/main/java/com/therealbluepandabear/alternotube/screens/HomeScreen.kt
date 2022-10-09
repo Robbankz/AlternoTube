@@ -24,6 +24,10 @@ import coil.compose.AsyncImage
 import com.therealbluepandabear.alternotube.models.RumbleCategory
 import com.therealbluepandabear.alternotube.models.RumbleVideo
 import com.therealbluepandabear.alternotube.viewmodels.HomeScreenViewModel
+import androidx.compose.ui.layout.ContentScale
+
+
+
 
 @Composable
 private fun EditorPicks() {
@@ -44,8 +48,9 @@ private fun EditorPicks() {
     ) {
         Column {
             AsyncImage(
-                viewModel.topVideo?.thumbnailSrc,
+                model = viewModel.topVideo?.thumbnailSrc,
                 contentDescription = null,
+                contentScale = ContentScale.FillWidth,
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -122,9 +127,8 @@ fun Category(
                     AsyncImage(
                         it.thumbnailSrc,
                         contentDescription = null,
-                        modifier = Modifier
-                            .width(300.dp)
-                            .wrapContentHeight()
+                        contentScale = ContentScale.FillWidth,
+                        modifier = Modifier.fillMaxWidth()
                     )
 
                     Column(
@@ -209,7 +213,6 @@ fun HomeScreen(
         Column(
             modifier = Modifier
                 .verticalScroll(rememberScrollState())
-                .height(1700.dp)
         ) {
 
             EditorPicks()
