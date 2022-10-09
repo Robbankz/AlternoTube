@@ -31,7 +31,7 @@ private fun EditorPicks() {
     Text(
         stringResource(id = R.string.homeScreen_editorPicks).uppercase(),
         style = MaterialTheme.typography.labelMedium,
-        modifier = Modifier.padding(8.dp),
+        modifier = Modifier.padding(8.dp, 8.dp, 0.dp, 0.dp),
     )
 
     ElevatedCard(
