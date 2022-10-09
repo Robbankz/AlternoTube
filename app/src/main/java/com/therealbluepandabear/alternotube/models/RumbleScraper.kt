@@ -100,7 +100,7 @@ class RumbleScraper private constructor() {
 
                     val doc = Jsoup.connect("$RUMBLE_API_URL${embedId.reversed()}")
                         .ignoreContentType(true).get()
-                    val jsonData = doc.select("body").first()?.text()
+                    val jsonData = doc.selectFirst("body")?.text()
 
                     val mp4 =
                         JsonParser.parseString(jsonData).asJsonObject.get("u").asJsonObject.get("mp4").asJsonObject.get(
@@ -127,12 +127,12 @@ class RumbleScraper private constructor() {
             val channel = RumbleChannel()
             val video = RumbleVideo()
 
-            channel.name = document.select("span.media-heading-name").first()?.text()
+            channel.name = document.selectFirst("span.media-heading-name")?.text()
             channel.isVerified = document.select("svg.verification-badge-icon.media-heading-verified").isNotEmpty()
 
             video.title = document.title()
             video.rumbles = RumbleScraperUtils.convertShorthandNumberToInt(
-                document.select("div.rumbles-vote").first()?.select("span.rumbles-count")?.first()?.text().toString()
+                document.selectFirst("div.rumbles-vote")?.selectFirst("span.rumbles-count")?.text().toString()
             )
 
             video.channel = channel
@@ -159,16 +159,16 @@ class RumbleScraper private constructor() {
             val video = RumbleVideo()
             val channel = RumbleChannel()
 
-            video.title = document.select("h3.mediaList-heading.size-xlarge").first()?.text()
+            video.title = document.selectFirst("h3.mediaList-heading.size-xlarge")?.text()
             video.thumbnailSrc = document.select("img.mediaList-image").attr("src")
             video.views =
-                document.select("small.mediaList-plays").first()?.text()?.replace(" views", "")
+                document.selectFirst("small.mediaList-plays")?.text()?.replace(" views", "")
                     ?.replace(",", "").toString().toIntOrNull()
-            video.uploadDate = document.select("small.mediaList-timestamp").first()?.text()
+            video.uploadDate = document.selectFirst("small.mediaList-timestamp")?.text()
 
-            channel.name = document.select("h4.mediaList-by-heading").first()?.text()
+            channel.name = document.selectFirst("h4.mediaList-by-heading")?.text()
 
-            val css = document.select("style").first()?.data().toString()
+            val css = document.selectFirst("style")?.data().toString()
             val toFind = "background-image:"
             val word = Pattern.compile(toFind)
             val matcher = word.matcher(css)
@@ -209,21 +209,23 @@ class RumbleScraper private constructor() {
 
             val videos = mutableListOf<RumbleVideo>()
 
-            for ((index, element) in (document.select("section.one-thirds")[rumbleCategory.index]?.select("li.mediaList-item") ?: emptyList()).withIndex()) {
+            val toLoop = document.select("section.one-thirds")[rumbleCategory.index]?.select("li.mediaList-item") ?: emptyList()
+
+            for ((index, element) in toLoop.withIndex()) {
                 val video = RumbleVideo()
                 video.channel = RumbleChannel()
 
                 video.title = if (index == 0) {
-                    element.select("h3.mediaList-heading.size-large").first()?.text()
+                    element.selectFirst("h3.mediaList-heading.size-large")?.text()
                 } else {
-                    element.select("h3.mediaList-heading.size-small").first()?.text()
+                    element.selectFirst("h3.mediaList-heading.size-small")?.text()
                 }
                 video.thumbnailSrc = element.select("img.mediaList-image").attr("src")
-                video.channel?.name = element.select("h4.mediaList-by-heading").first()?.text().toString()
+                video.channel?.name = element.selectFirst("h4.mediaList-by-heading")?.text()
                 video.videoUrl = RUMBLE_URL + if (index == 0) {
-                    element.select("a.mediaList-link.size-large").first()?.attr("href")
+                    element.selectFirst("a.mediaList-link.size-large")?.attr("href")
                 } else {
-                    element.select("a.mediaList-link.size-small").first()?.attr("href")
+                    element.selectFirst("a.mediaList-link.size-small")?.attr("href")
                 }
 
                 videos.add(video)
