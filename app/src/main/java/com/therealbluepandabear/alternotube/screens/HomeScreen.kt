@@ -85,7 +85,7 @@ private fun EditorPicks() {
 
                         if (viewModel.topVideo?.views != null) {
                             Text(
-                                "${viewModel.topVideo?.views.toString()} views",
+                                stringResource(id = R.string.generic_views, viewModel.topVideo?.views ?: ""),
                                 style = MaterialTheme.typography.titleSmall
                             )
                         }

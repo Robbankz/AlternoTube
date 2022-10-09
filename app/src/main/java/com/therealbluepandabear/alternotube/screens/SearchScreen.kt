@@ -34,7 +34,7 @@ fun RumbleSearchResult(rumbleSearchResult: RumbleSearchResult, onVideoTapped: ()
             rumbleSearchResult.channel.let { creator ->
                 val text = when {
                     rumbleSearchResult.views > 0 -> {
-                        "${creator.name}, ${rumbleSearchResult.views} views"
+                        "${creator.name}, ${stringResource(id = R.string.generic_views, rumbleSearchResult.views)}"
                     }
 
                     else -> {

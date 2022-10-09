@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">AlternoTube</string>
 
+    <string name="generic_views">%1$d views</string>
+
     <string name="homeScreen_editorPicks">Editor Picks</string>
     <string name="homeScreen_news">News</string>
     <string name="homeScreen_viral">Viral</string>
