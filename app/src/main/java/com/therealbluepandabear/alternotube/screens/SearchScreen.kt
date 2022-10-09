@@ -21,6 +21,7 @@ import coil.compose.AsyncImage
 import com.therealbluepandabear.alternotube.viewmodels.SearchScreenViewModel
 import com.therealbluepandabear.alternotube.R
 import com.therealbluepandabear.alternotube.models.RumbleSearchResult
+import com.therealbluepandabear.alternotube.models.StringConstants
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -117,26 +118,22 @@ fun SearchScreen(onVideoTapped: (String) -> Unit) {
             }
         }
 
-        when {
-            viewModel.finalizedSearchQuery != null && viewModel.finalizedSearchQuery!!.second.data.isEmpty() && viewModel.finalizedSearchQuery!!.second.exception == null -> {
+        viewModel.jsoupResponseScrapeSearchResults?.let {
+            if (it.message == StringConstants.JSOUP_RESPONSE_NO_RESULTS_FOUND) {
                 Text(
                     stringResource(id = R.string.searchScreen_no_results_found)
                 )
-            }
-
-            viewModel.finalizedSearchQuery != null && viewModel.finalizedSearchQuery!!.second.data.isEmpty() && viewModel.finalizedSearchQuery!!.second.exception != null -> {
+            } else if (it.exception != null) {
                 Text(
-                    stringResource(id = R.string.searchScreen_failed_to_load_search_results, viewModel.finalizedSearchQuery!!.second.exception!!)
+                    stringResource(id = R.string.searchScreen_failed_to_load_search_results, it.exception)
                 )
-            }
-
-            viewModel.finalizedSearchQuery != null && viewModel.finalizedSearchQuery!!.second.data.isNotEmpty() -> {
+            } else {
                 LazyColumn(
                     modifier = Modifier.weight(1f),
                 ) {
-                    items(viewModel.finalizedSearchQuery!!.second.data) {
-                        RumbleSearchResult(rumbleSearchResult = it) {
-                            onVideoTapped(it.id)
+                    items(viewModel.finalizedSearchQuery?.second ?: emptyList()) { rumbleSearchResult ->
+                        RumbleSearchResult(rumbleSearchResult = rumbleSearchResult) {
+                            onVideoTapped(rumbleSearchResult.id)
                         }
                     }
                 }

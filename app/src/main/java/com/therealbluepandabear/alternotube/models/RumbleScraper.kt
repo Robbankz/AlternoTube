@@ -16,7 +16,7 @@ class RumbleScraper private constructor() {
         }
     }
 
-    fun scrapeSearchResults(query: String, page: Int = 1): JsoupResponse<List<RumbleSearchResult>> {
+    fun scrapeSearchResults(query: String, page: Int = 1): JsoupResponse<List<RumbleSearchResult>?> {
         val exception: Exception?
 
         try {
@@ -26,7 +26,7 @@ class RumbleScraper private constructor() {
             val document = Jsoup.connect(url).get()
 
             if (document.select("li.video-listing-entry").size == 0) {
-                return JsoupResponse(null, emptyList())
+                return JsoupResponse(null, null, StringConstants.JSOUP_RESPONSE_NO_RESULTS_FOUND)
             } else {
                 for (element in document.select("li.video-listing-entry")) {
                     val searchResult = RumbleSearchResult("", RumbleChannel("", 0, false), 0, "", "")

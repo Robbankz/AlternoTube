@@ -15,25 +15,32 @@ class SearchScreenViewModel : ViewModel() {
     private val rumbleScraper = RumbleScraper.create()
     private var currentPage: Int = 1
 
-    var finalizedSearchQuery: Pair<String, JsoupResponse<List<RumbleSearchResult>>>? by mutableStateOf(null)
+    var jsoupResponseScrapeSearchResults: JsoupResponse<List<RumbleSearchResult>?>? by mutableStateOf(null)
+
+    var finalizedSearchQuery: Pair<String, List<RumbleSearchResult>?>? by mutableStateOf(null)
 
     fun scrapeSearchResults(query: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            finalizedSearchQuery = Pair(query, rumbleScraper.scrapeSearchResults(query, currentPage))
+            jsoupResponseScrapeSearchResults = rumbleScraper.scrapeSearchResults(query, currentPage)
+            jsoupResponseScrapeSearchResults?.let {
+                finalizedSearchQuery = Pair(query, it.data)
+            }
         }
     }
 
     fun incrementCurrentPage() {
-        if (finalizedSearchQuery?.second?.data?.isNotEmpty() == true) {
+        finalizedSearchQuery?.let {
             currentPage++
-            scrapeSearchResults(finalizedSearchQuery!!.first)
+            scrapeSearchResults(it.first)
         }
     }
 
     fun decrementCurrentPage() {
         if (currentPage > 1) {
-            currentPage--
-            scrapeSearchResults(finalizedSearchQuery!!.first)
+            finalizedSearchQuery?.let {
+                currentPage--
+                scrapeSearchResults(finalizedSearchQuery!!.first)
+            }
         }
     }
 

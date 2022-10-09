@@ -1,3 +1,3 @@
 package com.therealbluepandabear.alternotube.models
 
-data class JsoupResponse<T>(val exception: Exception?, val data: T)
+data class JsoupResponse<T>(val exception: Exception?, val data: T, val message: String? = null)
