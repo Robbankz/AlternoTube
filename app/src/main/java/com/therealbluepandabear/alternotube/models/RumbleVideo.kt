@@ -13,6 +13,14 @@ data class RumbleVideo(
 
     val id: String?
         get() {
-            return if (videoUrl != null) videoUrl!!.substring(20, videoUrl!!.indexOf("-")) else null
+            return if (videoUrl != null) {
+                try {
+                    videoUrl!!.substring(20, videoUrl!!.indexOf("-"))
+                } catch (e: Exception) {
+                    return null
+                }
+            } else {
+                null
+            }
         }
 }
