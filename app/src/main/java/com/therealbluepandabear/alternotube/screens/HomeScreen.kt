@@ -10,7 +10,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -25,9 +25,6 @@ import com.therealbluepandabear.alternotube.models.RumbleCategory
 import com.therealbluepandabear.alternotube.models.RumbleVideo
 import com.therealbluepandabear.alternotube.viewmodels.HomeScreenViewModel
 import androidx.compose.ui.layout.ContentScale
-
-
-
 
 @Composable
 private fun EditorPicks() {
@@ -48,7 +45,7 @@ private fun EditorPicks() {
     ) {
         Column {
             AsyncImage(
-                model = viewModel.topVideo?.thumbnailSrc,
+                model = viewModel.topVideo.thumbnailSrc,
                 contentDescription = null,
                 contentScale = ContentScale.FillWidth,
                 modifier = Modifier.fillMaxWidth()
@@ -58,7 +55,7 @@ private fun EditorPicks() {
                 modifier = Modifier.padding(16.dp)
             ) {
                 Text(
-                    viewModel.topVideo?.title ?: "",
+                    viewModel.topVideo.title ?: "",
                     style = MaterialTheme.typography.headlineMedium
                 )
 
@@ -70,7 +67,7 @@ private fun EditorPicks() {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     AsyncImage(
-                        viewModel.topVideo?.channel?.profileImageSrc,
+                        viewModel.topVideo.channel?.profileImageSrc,
                         contentDescription = null,
                         modifier = Modifier
                             .size(35.dp, 35.dp)
@@ -83,20 +80,20 @@ private fun EditorPicks() {
 
                     Column {
                         Text(
-                            viewModel.topVideo?.channel?.name ?: "",
+                            viewModel.topVideo.channel?.name ?: "",
                             style = MaterialTheme.typography.titleSmall,
                             fontWeight = FontWeight.Bold
                         )
 
-                        if (viewModel.topVideo?.views != null) {
+                        if (viewModel.topVideo.views != null) {
                             Text(
-                                stringResource(id = R.string.generic_views, viewModel.topVideo?.views ?: ""),
+                                stringResource(id = R.string.generic_views, viewModel.topVideo.views ?: ""),
                                 style = MaterialTheme.typography.titleSmall
                             )
                         }
 
                         Text(
-                            viewModel.topVideo?.uploadDate ?: "",
+                            viewModel.topVideo.uploadDate ?: "",
                             style = MaterialTheme.typography.titleSmall
                         )
                     }
@@ -114,7 +111,7 @@ fun Category(
     val viewModel: HomeScreenViewModel = viewModel()
 
     LazyRow {
-        items(viewModel.categoryVideos[category] ?: emptyList()) {
+        items(viewModel.categories[category] ?: emptyList()) {
             ElevatedCard(
                 modifier = Modifier
                     .padding(8.dp)
@@ -205,6 +202,18 @@ fun SearchButton(
 }
 
 @Composable
+fun Categories(onVideoTapped: (String) -> Unit) {
+    for (category in RumbleCategory.values()) {
+        CategoryLabel(category)
+        Category(category) {
+            it.id?.let { id ->
+                onVideoTapped.invoke(id)
+            }
+        }
+    }
+}
+
+@Composable
 fun HomeScreen(
     onSearchTapped: () -> Unit,
     onVideoTapped: (String) -> Unit
@@ -216,21 +225,13 @@ fun HomeScreen(
         ) {
 
             EditorPicks()
-
-            for (category in RumbleCategory.values()) {
-                CategoryLabel(category)
-                Category(category) {
-                    if (it.id != null) {
-                        onVideoTapped.invoke(it.id!!)
-                    }
-                }
-            }
+            Categories(onVideoTapped)
         }
 
         SearchButton(
             Modifier
-                .align(Alignment.BottomEnd)
                 .padding(16.dp)
+                .align(Alignment.BottomEnd)
         ) {
             onSearchTapped()
         }

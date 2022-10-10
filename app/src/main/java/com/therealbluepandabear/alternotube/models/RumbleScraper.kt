@@ -3,7 +3,6 @@ package com.therealbluepandabear.alternotube.models
 import com.google.gson.Gson
 import com.google.gson.JsonParser
 import org.jsoup.Jsoup
-import java.util.regex.Pattern
 
 class RumbleScraper private constructor() {
     companion object {
@@ -38,9 +37,7 @@ class RumbleScraper private constructor() {
                         for (element3 in element2.select("div.ellipsis-1")) {
                             searchResult.channel.name = element3.text()
 
-                            if (element3.select("svg.video-item--by-verified verification-badge-icon")
-                                    .isNotEmpty()
-                            ) {
+                            if (element3.select("svg.video-item--by-verified verification-badge-icon").isNotEmpty()) {
                                 searchResult.channel.isVerified = true
                             }
                         }
@@ -149,113 +146,4 @@ class RumbleScraper private constructor() {
         return JsoupResponse(exception, null)
     }
 
-    fun scrapeTopVideo(): JsoupResponse<RumbleVideo?> {
-        val exception: Exception?
-
-        try {
-            val document = Jsoup.connect(RUMBLE_URL).get()
-
-            val video = RumbleVideo()
-            val channel = RumbleChannel()
-
-            video.title = document.selectFirst("h3.mediaList-heading.size-xlarge")?.text()
-            video.thumbnailSrc = document.select("img.mediaList-image").attr("src")
-            video.views =
-                document.selectFirst("small.mediaList-plays")?.text()?.replace(" views", "")
-                    ?.replace(",", "").toString().toIntOrNull()
-            video.uploadDate = document.selectFirst("small.mediaList-timestamp")?.text()
-
-            channel.name = document.selectFirst("h4.mediaList-by-heading")?.text()
-
-            val css = document.selectFirst("style")?.data().toString()
-            val toFind = "background-image:"
-            val word = Pattern.compile(toFind)
-            val matcher = word.matcher(css)
-
-            var i = 0
-
-            var profileImageSrc: String? = null
-
-            while (matcher.find()) {
-                i++
-
-                if (i == 2) {
-                    val chunk1 = css.substring(matcher.start(), matcher.start() + 100)
-                    val chunk2 = chunk1.substring(chunk1.indexOf('(') + 1, chunk1.indexOf(')'))
-                    profileImageSrc = chunk2
-                    break
-                }
-            }
-
-            channel.profileImageSrc = profileImageSrc
-
-            video.channel = channel
-
-            return JsoupResponse(null, video)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            exception = e
-        }
-
-        return JsoupResponse(exception, null)
-    }
-
-    private fun scrapeCategory(rumbleCategory: RumbleCategory): JsoupResponse<List<RumbleVideo>> {
-        val exception: Exception?
-
-        try {
-            val document = Jsoup.connect(RUMBLE_URL).get()
-
-            val videos = mutableListOf<RumbleVideo>()
-
-            val toLoop = document.select("section.one-thirds")[rumbleCategory.index]?.select("li.mediaList-item") ?: emptyList()
-
-            for ((index, element) in toLoop.withIndex()) {
-                val video = RumbleVideo()
-                video.channel = RumbleChannel()
-
-                video.title = if (index == 0) {
-                    element.selectFirst("h3.mediaList-heading.size-large")?.text()
-                } else {
-                    element.selectFirst("h3.mediaList-heading.size-small")?.text()
-                }
-                video.thumbnailSrc = element.select("img.mediaList-image").attr("src")
-                video.channel?.name = element.selectFirst("h4.mediaList-by-heading")?.text()
-                video.videoUrl = RUMBLE_URL + if (index == 0) {
-                    element.selectFirst("a.mediaList-link.size-large")?.attr("href")
-                } else {
-                    element.selectFirst("a.mediaList-link.size-small")?.attr("href")
-                }
-
-                videos.add(video)
-            }
-
-            return JsoupResponse(null, videos)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            exception = e
-        }
-
-        return JsoupResponse(exception, emptyList())
-    }
-
-    fun scrapeCategories(): JsoupResponse<Map<RumbleCategory, List<RumbleVideo>>> {
-        val exception: Exception?
-
-        try {
-            val map = mutableMapOf<RumbleCategory, List<RumbleVideo>>()
-
-            for (category in RumbleCategory.values()) {
-                val jsoupResponse = scrapeCategory(category)
-                map[category] = jsoupResponse.data
-            }
-
-            return JsoupResponse(null, map)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            exception = e
-        }
-
-        return JsoupResponse(exception, emptyMap())
-    }
 }
