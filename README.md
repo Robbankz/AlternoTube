@@ -3,11 +3,8 @@ Alt-tech video platform front end for Android (WIP; PRIVATE USE ONLY).
 
 AlternoTube is currently in very early development stages and is currently only intended for private use.
 
-<div align="center" style="width:100%; display:flex; justify-content:space-between;">
-<img src="https://user-images.githubusercontent.com/50536495/194220447-7c3ebdf3-8fc5-45a7-922f-27984672004c.png">
-
-<img src="https://user-images.githubusercontent.com/50536495/194220581-b952148f-2f43-42e1-9819-54dc8faf154d.png">
-</div>
+![image](https://user-images.githubusercontent.com/50536495/194959645-75513a3a-1720-4108-850c-4027c66ed780.png)
+![Image2](https://user-images.githubusercontent.com/50536495/194959503-4846e6dd-9064-4d71-8c2e-3420bc49f53c.png)
 
 # About
 
