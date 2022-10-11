@@ -20,33 +20,32 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.therealbluepandabear.alternotube.viewmodels.SearchScreenViewModel
 import com.therealbluepandabear.alternotube.R
-import com.therealbluepandabear.alternotube.models.RumbleSearchResult
-import com.therealbluepandabear.alternotube.models.StringConstants
+import com.therealbluepandabear.alternotube.models.RumbleVideo
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RumbleSearchResult(rumbleSearchResult: RumbleSearchResult, onVideoTapped: () -> Unit) {
+fun RumbleSearchResult(rumbleSearchResult: RumbleVideo, onVideoTapped: () -> Unit) {
     ListItem(
         headlineText = {
-            Text(rumbleSearchResult.title)
+            Text(rumbleSearchResult.title ?: "")
         },
 
         supportingText = {
             rumbleSearchResult.channel.let { creator ->
                 val text = when {
-                    rumbleSearchResult.views > 0 -> {
-                        "${creator.name}, ${stringResource(id = R.string.generic_views, rumbleSearchResult.views)}"
+                    (rumbleSearchResult.views ?: 0) > 0 -> {
+                        "${creator?.name}, ${stringResource(id = R.string.generic_views, rumbleSearchResult.views ?: "")}"
                     }
 
                     else -> {
-                        creator.name ?: ""
+                        creator?.name ?: ""
                     }
                 }
 
                 Row {
                     Text(text)
 
-                    if (creator.isVerified == true) {
+                    if (creator?.isVerified == true) {
                         Icon(
                             painter = painterResource(R.drawable.ic_baseline_verified_24),
                             tint = Color.Cyan,
@@ -78,7 +77,7 @@ fun SearchScreen(onVideoTapped: (String) -> Unit) {
     val viewModel: SearchScreenViewModel = viewModel()
     val keyboardController = LocalSoftwareKeyboardController.current
 
-    var query: String by rememberSaveable { mutableStateOf("") }
+    var searchQuery: String by rememberSaveable { mutableStateOf("") }
 
     Column(
         modifier = Modifier
@@ -88,8 +87,8 @@ fun SearchScreen(onVideoTapped: (String) -> Unit) {
             modifier = Modifier.wrapContentSize()
         ) {
             OutlinedTextField(
-                value = query,
-                onValueChange = { query = it },
+                value = searchQuery,
+                onValueChange = { searchQuery = it },
                 label = {
                     Text(
                         stringResource(id = R.string.searchScreen_search)
@@ -98,16 +97,16 @@ fun SearchScreen(onVideoTapped: (String) -> Unit) {
                 leadingIcon = {
                     Icon(
                         Icons.Default.Search,
-                        contentDescription = "Search"
+                        contentDescription = stringResource(id = R.string.searchScreen_search)
                     )
                 },
             )
 
             Button(
                 onClick = {
-                    if (query.isNotBlank()) {
+                    if (searchQuery.isNotBlank()) {
                         viewModel.resetCurrentPage()
-                        viewModel.scrapeSearchResults(query)
+                        viewModel.scrapeSearchResults(searchQuery)
                         keyboardController?.hide()
                     }
                 },
@@ -118,31 +117,13 @@ fun SearchScreen(onVideoTapped: (String) -> Unit) {
             }
         }
 
-        viewModel.jsoupResponseScrapeSearchResults?.let {
-            when (it.message) {
-                StringConstants.JSOUP_RESPONSE_NO_RESULTS_FOUND -> {
-                    Text(
-                        stringResource(id = R.string.searchScreen_no_results_found)
-                    )
-                }
-
-                StringConstants.JSOUP_RESPONSE_FAILURE -> {
-                    it.exception?.let { exception ->
-                        Text(
-                            stringResource(id = R.string.searchScreen_failed_to_load_search_results, exception)
-                        )
-                    }
-                }
-
-                else -> {
-                    LazyColumn(
-                        modifier = Modifier.weight(1f),
-                    ) {
-                        items(viewModel.finalizedSearchQuery?.second ?: emptyList()) { rumbleSearchResult ->
-                            RumbleSearchResult(rumbleSearchResult = rumbleSearchResult) {
-                                onVideoTapped(rumbleSearchResult.id)
-                            }
-                        }
+        LazyColumn(
+            modifier = Modifier.weight(1f),
+        ) {
+            items(viewModel.finalizedSearchQuery?.second ?: emptyList()) { rumbleSearchResult ->
+                RumbleSearchResult(rumbleSearchResult = rumbleSearchResult) {
+                    rumbleSearchResult.id?.let {
+                        onVideoTapped(it)
                     }
                 }
             }

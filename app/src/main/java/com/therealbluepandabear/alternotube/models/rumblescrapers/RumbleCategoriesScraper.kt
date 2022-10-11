@@ -1,5 +1,6 @@
-package com.therealbluepandabear.alternotube.models
+package com.therealbluepandabear.alternotube.models.rumblescrapers
 
+import com.therealbluepandabear.alternotube.models.*
 import org.jsoup.Jsoup
 
 class RumbleCategoriesScraper private constructor() {

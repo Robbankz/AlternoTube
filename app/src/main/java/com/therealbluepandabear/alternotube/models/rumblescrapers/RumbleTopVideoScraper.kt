@@ -1,5 +1,9 @@
-package com.therealbluepandabear.alternotube.models
+package com.therealbluepandabear.alternotube.models.rumblescrapers
 
+import com.therealbluepandabear.alternotube.models.JsoupResponse
+import com.therealbluepandabear.alternotube.models.RumbleChannel
+import com.therealbluepandabear.alternotube.models.RumbleVideo
+import com.therealbluepandabear.alternotube.models.StringConstants
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import java.util.regex.Pattern

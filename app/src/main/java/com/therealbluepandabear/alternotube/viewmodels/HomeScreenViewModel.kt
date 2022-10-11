@@ -6,11 +6,16 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.therealbluepandabear.alternotube.models.*
+import com.therealbluepandabear.alternotube.models.rumblescrapers.RumbleCategoriesScraper
+import com.therealbluepandabear.alternotube.models.rumblescrapers.RumbleTopVideoScraper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class HomeScreenViewModel : ViewModel() {
     private val dispatcher = Dispatchers.IO
+
+    private val rumbleCategoriesScraper = RumbleCategoriesScraper.createInstance()
+    private val rumbleTopVideoScraper = RumbleTopVideoScraper.createInstance()
 
     var topVideo: RumbleVideo by mutableStateOf(RumbleVideo())
     var categories: Map<RumbleCategory, List<RumbleVideo>?> by mutableStateOf(emptyMap())
@@ -22,7 +27,7 @@ class HomeScreenViewModel : ViewModel() {
 
     private fun scrapeTopVideo() {
         viewModelScope.launch(dispatcher) {
-            RumbleTopVideoScraper.createInstance().scrape().apply {
+            rumbleTopVideoScraper.scrape().apply {
                 topVideo = this.data ?: RumbleVideo()
             }
         }
@@ -30,7 +35,7 @@ class HomeScreenViewModel : ViewModel() {
 
     private fun scrapeCategories() {
         viewModelScope.launch(dispatcher) {
-            RumbleCategoriesScraper.createInstance().scrape().apply {
+            rumbleCategoriesScraper.scrape().apply {
                 categories = this.data ?: emptyMap()
             }
         }
