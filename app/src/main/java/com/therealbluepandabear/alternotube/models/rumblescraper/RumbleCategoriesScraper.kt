@@ -1,4 +1,4 @@
-package com.therealbluepandabear.alternotube.models.rumblescrapers
+package com.therealbluepandabear.alternotube.models.rumblescraper
 
 import com.therealbluepandabear.alternotube.models.*
 import org.jsoup.Jsoup
@@ -33,7 +33,7 @@ class RumbleCategoriesScraper private constructor() {
             val exception: Exception?
 
             try {
-                val document = Jsoup.connect(StringConstants.RUMBLE_URL).get()
+                val document = Jsoup.connect(RumbleScraperConstants.RUMBLE_URL).get()
 
                 val videos = mutableListOf<RumbleVideo>()
 
@@ -56,7 +56,7 @@ class RumbleCategoriesScraper private constructor() {
                             else if (!isFirstIndex && category != RumbleCategory.EditorPicks) element.selectFirst("h3.mediaList-heading.size-small")?.text()
                             else element.selectFirst("h3.mediaList-heading.size-medium")?.text(),
                         thumbnailSrc = element.selectFirst("img.mediaList-image")?.attr("src"),
-                        videoUrl = StringConstants.RUMBLE_URL +
+                        videoUrl = RumbleScraperConstants.RUMBLE_URL +
                             if (isFirstIndex && category != RumbleCategory.EditorPicks) element.selectFirst("a.mediaList-link.size-large")?.attr("href")
                             else if (!isFirstIndex && category != RumbleCategory.EditorPicks) element.selectFirst("a.mediaList-link.size-small")?.attr("href")
                             else element.selectFirst("a.mediaList-link.size-medium")?.attr("href")

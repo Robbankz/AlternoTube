@@ -11,8 +11,8 @@ import kotlinx.coroutines.launch
 import androidx.compose.runtime.setValue
 import com.therealbluepandabear.alternotube.models.RumbleVideo
 import com.therealbluepandabear.alternotube.models.StringConstants
-import com.therealbluepandabear.alternotube.models.rumblescrapers.RumbleVideoDetailsScraper
-import com.therealbluepandabear.alternotube.models.rumblescrapers.RumbleVideoSourceScraper
+import com.therealbluepandabear.alternotube.models.rumblescraper.RumbleVideoDetailsScraper
+import com.therealbluepandabear.alternotube.models.rumblescraper.RumbleVideoSourceScraper
 
 class VideoScreenViewModel(stateHandle: SavedStateHandle) : ViewModel() {
     private val rumbleVideoSourceScraper = RumbleVideoSourceScraper.createInstance()

@@ -1,7 +1,7 @@
 package com.therealbluepandabear.alternotube
 
 import com.therealbluepandabear.alternotube.models.VideoDetailsScraper
-import com.therealbluepandabear.alternotube.models.rumblescrapers.RumbleVideoDetailsScraper
+import com.therealbluepandabear.alternotube.models.rumblescraper.RumbleVideoDetailsScraper
 import org.junit.Test
 
 import org.junit.Assert.*

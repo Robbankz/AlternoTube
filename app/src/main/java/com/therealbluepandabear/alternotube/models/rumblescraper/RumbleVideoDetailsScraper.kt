@@ -1,4 +1,4 @@
-package com.therealbluepandabear.alternotube.models.rumblescrapers
+package com.therealbluepandabear.alternotube.models.rumblescraper
 
 import com.therealbluepandabear.alternotube.models.*
 import org.jsoup.Jsoup
@@ -9,7 +9,7 @@ class RumbleVideoDetailsScraper private constructor() : VideoDetailsScraper {
         val exception: Exception?
 
         try {
-            val document = Jsoup.connect("${StringConstants.RUMBLE_URL}$videoId").get()
+            val document = Jsoup.connect("${RumbleScraperConstants.RUMBLE_URL}$videoId").get()
 
             val channel = RumbleChannel()
             val video = RumbleVideo()

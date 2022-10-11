@@ -1,4 +1,4 @@
-package com.therealbluepandabear.alternotube.models.rumblescrapers
+package com.therealbluepandabear.alternotube.models.rumblescraper
 
 import com.therealbluepandabear.alternotube.models.*
 import org.jsoup.Jsoup
@@ -11,7 +11,7 @@ class RumbleSearchScraper private constructor() : SearchScraper {
         try {
             val searchResults = mutableListOf<RumbleVideo>()
 
-            val url = if (page <= 1) "${StringConstants.RUMBLE_URL}search/video?q=$searchQuery" else "${StringConstants.RUMBLE_URL}search/video?q=$searchQuery&page=$page"
+            val url = if (page <= 1) "${RumbleScraperConstants.RUMBLE_URL}search/video?q=$searchQuery" else "${RumbleScraperConstants.RUMBLE_URL}search/video?q=$searchQuery&page=$page"
             val document = Jsoup.connect(url).get()
 
             if (document.select("li.video-listing-entry").isEmpty()) {
@@ -27,7 +27,7 @@ class RumbleSearchScraper private constructor() : SearchScraper {
                         views = element.selectFirst("span.video-item--meta.video-item--views")?.attr("data-value")?.replace(",", "")?.toInt(),
                         thumbnailSrc = element.selectFirst("img.video-item--img")?.attr("src"),
                         videoUrl = if (element.select("a.video-item--a").isNotEmpty())
-                            "${StringConstants.RUMBLE_URL}${element.selectFirst("a.video-item--a")?.attr("href")}"
+                            "${RumbleScraperConstants.RUMBLE_URL}${element.selectFirst("a.video-item--a")?.attr("href")}"
                         else
                             null
                     )

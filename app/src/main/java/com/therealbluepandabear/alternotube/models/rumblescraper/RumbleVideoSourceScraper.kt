@@ -1,4 +1,4 @@
-package com.therealbluepandabear.alternotube.models.rumblescrapers
+package com.therealbluepandabear.alternotube.models.rumblescraper
 
 import com.google.gson.Gson
 import com.google.gson.JsonParser
@@ -11,7 +11,7 @@ class RumbleVideoSourceScraper private constructor() : VideoSourceScraper {
         var exception: Exception? = null
 
         try {
-            val document = Jsoup.connect("${StringConstants.RUMBLE_URL}$channelId").get()
+            val document = Jsoup.connect("${RumbleScraperConstants.RUMBLE_URL}$channelId").get()
 
             for (element in document.select("script")) {
                 if (element.attr("type") == "application/ld+json") {
@@ -32,7 +32,7 @@ class RumbleVideoSourceScraper private constructor() : VideoSourceScraper {
                         }
                     }
 
-                    val doc = Jsoup.connect("${StringConstants.RUMBLE_API_URL}${embedId.reversed()}")
+                    val doc = Jsoup.connect("${RumbleScraperConstants.RUMBLE_API_URL}${embedId.reversed()}")
                         .ignoreContentType(true).get()
                     val jsonData = doc.selectFirst("body")?.text()
 

@@ -1,9 +1,8 @@
-package com.therealbluepandabear.alternotube.models.rumblescrapers
+package com.therealbluepandabear.alternotube.models.rumblescraper
 
 import com.therealbluepandabear.alternotube.models.JsoupResponse
 import com.therealbluepandabear.alternotube.models.RumbleChannel
 import com.therealbluepandabear.alternotube.models.RumbleVideo
-import com.therealbluepandabear.alternotube.models.StringConstants
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import java.util.regex.Pattern
@@ -38,7 +37,7 @@ class RumbleTopVideoScraper private constructor() {
         val exception: Exception?
 
         try {
-            val document = Jsoup.connect(StringConstants.RUMBLE_URL).get()
+            val document = Jsoup.connect(RumbleScraperConstants.RUMBLE_URL).get()
 
             val video = RumbleVideo(
                 channel = RumbleChannel(
@@ -49,7 +48,7 @@ class RumbleTopVideoScraper private constructor() {
                 thumbnailSrc = document.select("img.mediaList-image").attr("src"),
                 views = document.selectFirst("small.mediaList-plays")?.text()?.replace(" views", "")?.replace(",", "").toString().toIntOrNull(),
                 uploadDate = document.selectFirst("small.mediaList-timestamp")?.text(),
-                videoUrl = StringConstants.RUMBLE_URL + document.selectFirst("a.mediaList-link.size-xlarge")?.attr("href")
+                videoUrl = RumbleScraperConstants.RUMBLE_URL + document.selectFirst("a.mediaList-link.size-xlarge")?.attr("href")
             )
 
             return JsoupResponse(null, video)

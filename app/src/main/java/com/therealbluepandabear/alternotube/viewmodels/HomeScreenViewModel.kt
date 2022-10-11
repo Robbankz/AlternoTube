@@ -6,8 +6,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.therealbluepandabear.alternotube.models.*
-import com.therealbluepandabear.alternotube.models.rumblescrapers.RumbleCategoriesScraper
-import com.therealbluepandabear.alternotube.models.rumblescrapers.RumbleTopVideoScraper
+import com.therealbluepandabear.alternotube.models.rumblescraper.RumbleCategoriesScraper
+import com.therealbluepandabear.alternotube.models.rumblescraper.RumbleTopVideoScraper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
