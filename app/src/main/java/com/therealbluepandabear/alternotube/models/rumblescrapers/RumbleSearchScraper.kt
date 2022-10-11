@@ -3,7 +3,7 @@ package com.therealbluepandabear.alternotube.models.rumblescrapers
 import com.therealbluepandabear.alternotube.models.*
 import org.jsoup.Jsoup
 
-class RumbleSearchScraper : SearchScraper {
+class RumbleSearchScraper private constructor() : SearchScraper {
 
     override fun scrape(searchQuery: String, page: Int): JsoupResponse<List<RumbleVideo>?> {
         val exception: Exception?

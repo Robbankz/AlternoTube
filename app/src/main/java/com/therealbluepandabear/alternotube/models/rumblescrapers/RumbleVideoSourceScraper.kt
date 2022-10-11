@@ -1,24 +1,17 @@
-package com.therealbluepandabear.alternotube.models
+package com.therealbluepandabear.alternotube.models.rumblescrapers
 
 import com.google.gson.Gson
 import com.google.gson.JsonParser
+import com.therealbluepandabear.alternotube.models.*
 import org.jsoup.Jsoup
 
-class RumbleScraper private constructor() {
-    companion object {
-        private const val RUMBLE_URL = "https://rumble.com/"
-        private const val RUMBLE_API_URL = "https://rumble.com/embedJS/u3/?request=video&ver=2&v="
+class RumbleVideoSourceScraper private constructor() : VideoSourceScraper {
 
-        fun create(): RumbleScraper {
-            return RumbleScraper()
-        }
-    }
-
-    fun scrapeVideoSource(id: String): JsoupResponse<String?> {
+    override fun scrape(channelId: String): JsoupResponse<String?> {
         var exception: Exception? = null
 
         try {
-            val document = Jsoup.connect("${RUMBLE_URL}$id").get()
+            val document = Jsoup.connect("${StringConstants.RUMBLE_URL}$channelId").get()
 
             for (element in document.select("script")) {
                 if (element.attr("type") == "application/ld+json") {
@@ -39,7 +32,7 @@ class RumbleScraper private constructor() {
                         }
                     }
 
-                    val doc = Jsoup.connect("$RUMBLE_API_URL${embedId.reversed()}")
+                    val doc = Jsoup.connect("${StringConstants.RUMBLE_API_URL}${embedId.reversed()}")
                         .ignoreContentType(true).get()
                     val jsonData = doc.selectFirst("body")?.text()
 
@@ -60,36 +53,9 @@ class RumbleScraper private constructor() {
         return JsoupResponse(exception, null)
     }
 
-    fun scrapeVideoDetails(id: String): JsoupResponse<RumbleVideo?> {
-        val exception: Exception?
-
-        try {
-            val document = Jsoup.connect("${RUMBLE_URL}$id").get()
-
-            val channel = RumbleChannel()
-            val video = RumbleVideo()
-
-            channel.name = document.selectFirst("span.media-heading-name")?.text()
-            channel.isVerified = document.select("svg.verification-badge-icon.media-heading-verified").isNotEmpty()
-
-            video.title = document.title()
-            video.rumbles = RumbleScraperUtils.convertShorthandNumberToInt(
-                document.selectFirst("div.rumbles-vote")?.selectFirst("span.rumbles-count")?.text().toString()
-            )
-
-            video.channel = channel
-
-            for (element in document.select("div.media-description")) {
-                video.descriptionHTML += element
-            }
-
-            return JsoupResponse(null, video)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            exception = e
+    companion object {
+        fun createInstance(): VideoSourceScraper {
+            return RumbleVideoSourceScraper()
         }
-
-        return JsoupResponse(exception, null)
     }
-
 }

@@ -6,16 +6,17 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.therealbluepandabear.alternotube.models.JsoupResponse
-import com.therealbluepandabear.alternotube.models.RumbleScraper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import androidx.compose.runtime.setValue
 import com.therealbluepandabear.alternotube.models.RumbleVideo
 import com.therealbluepandabear.alternotube.models.StringConstants
-
+import com.therealbluepandabear.alternotube.models.rumblescrapers.RumbleVideoDetailsScraper
+import com.therealbluepandabear.alternotube.models.rumblescrapers.RumbleVideoSourceScraper
 
 class VideoScreenViewModel(stateHandle: SavedStateHandle) : ViewModel() {
-    private val rumbleScraper = RumbleScraper.create()
+    private val rumbleVideoSourceScraper = RumbleVideoSourceScraper.createInstance()
+    private val rumbleVideoDetailsScraper = RumbleVideoDetailsScraper.createInstance()
     private val dispatcher = Dispatchers.IO
 
     var videoSource: JsoupResponse<String?>? by mutableStateOf(null)
@@ -30,13 +31,13 @@ class VideoScreenViewModel(stateHandle: SavedStateHandle) : ViewModel() {
 
     private fun scrapeVideoSource(id: String) {
         viewModelScope.launch(dispatcher) {
-            videoSource = rumbleScraper.scrapeVideoSource(id)
+            videoSource = rumbleVideoSourceScraper.scrape(id)
         }
     }
 
     private fun scrapeVideoDetailsForId(id: String) {
         viewModelScope.launch(dispatcher) {
-            video = rumbleScraper.scrapeVideoDetails(id)
+            video = rumbleVideoDetailsScraper.scrape(id)
         }
     }
 }

@@ -1,6 +1,5 @@
 package com.therealbluepandabear.alternotube
 
-import com.therealbluepandabear.alternotube.models.RumbleScraper
 import org.junit.Test
 
 import org.junit.Assert.*

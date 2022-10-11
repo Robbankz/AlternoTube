@@ -8,7 +8,7 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import java.util.regex.Pattern
 
-class RumbleTopVideoScraper {
+class RumbleTopVideoScraper private constructor() {
 
     private fun scrapeProfileImageSrc(document: Document): String? {
         val css = document.selectFirst("style")?.data().toString()
