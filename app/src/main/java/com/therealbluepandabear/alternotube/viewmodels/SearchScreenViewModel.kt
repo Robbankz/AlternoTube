@@ -11,7 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class SearchScreenViewModel : ViewModel() {
-    private val rumbleSearchScraper = RumbleSearchScraper.create()
+    private val rumbleSearchScraper = RumbleSearchScraper.createInstance()
 
     private var page: Int = 1
 

@@ -46,7 +46,7 @@ class RumbleSearchScraper private constructor() : SearchScraper {
     }
 
     companion object {
-        fun create(): SearchScraper {
+        fun createInstance(): SearchScraper {
             return RumbleSearchScraper()
         }
     }
