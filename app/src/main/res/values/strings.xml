@@ -3,7 +3,7 @@
 
     <string name="generic_views">%1$d views</string>
 
-    <string name="homeScreen_editorPicks">Editor Picks</string>
+    <string name="homeScreen_topVideo">Top Video</string>
     <string name="homeScreen_news">News</string>
     <string name="homeScreen_viral">Viral</string>
     <string name="homeScreen_finance">Finance</string>

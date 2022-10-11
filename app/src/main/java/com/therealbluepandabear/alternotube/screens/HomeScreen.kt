@@ -27,11 +27,11 @@ import com.therealbluepandabear.alternotube.viewmodels.HomeScreenViewModel
 import androidx.compose.ui.layout.ContentScale
 
 @Composable
-private fun EditorPicks() {
+private fun TopVideo() {
     val viewModel: HomeScreenViewModel = viewModel()
 
     Text(
-        stringResource(id = R.string.homeScreen_editorPicks).uppercase(),
+        stringResource(id = R.string.homeScreen_topVideo).uppercase(),
         style = MaterialTheme.typography.labelMedium,
         modifier = Modifier.padding(8.dp, 8.dp, 0.dp, 0.dp),
     )
@@ -224,7 +224,7 @@ fun HomeScreen(
                 .verticalScroll(rememberScrollState())
         ) {
 
-            EditorPicks()
+            TopVideo()
             Categories(onVideoTapped)
         }
 
