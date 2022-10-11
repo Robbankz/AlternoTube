@@ -14,61 +14,6 @@ class RumbleScraper private constructor() {
         }
     }
 
-    fun scrapeSearchResults(query: String, page: Int = 1): JsoupResponse<List<RumbleSearchResult>?> {
-        val exception: Exception?
-
-        try {
-            val searchResults = mutableListOf<RumbleSearchResult>()
-
-            val url = if (page <= 1) "${RUMBLE_URL}search/video?q=$query" else "${RUMBLE_URL}search/video?q=$query&page=$page"
-            val document = Jsoup.connect(url).get()
-
-            if (document.select("li.video-listing-entry").size == 0) {
-                return JsoupResponse(null, null, StringConstants.JSOUP_RESPONSE_NO_RESULTS_FOUND)
-            } else {
-                for (element in document.select("li.video-listing-entry")) {
-                    val searchResult = RumbleSearchResult("", RumbleChannel("", 0, false), 0, "", "")
-
-                    for (element2 in element.select("h3.video-item--title")) {
-                        searchResult.title = element2.text()
-                    }
-
-                    for (element2 in element.select("address.video-item--by")) {
-                        for (element3 in element2.select("div.ellipsis-1")) {
-                            searchResult.channel.name = element3.text()
-
-                            if (element3.select("svg.video-item--by-verified verification-badge-icon").isNotEmpty()) {
-                                searchResult.channel.isVerified = true
-                            }
-                        }
-                    }
-
-                    for (element2 in element.select("span.video-item--meta.video-item--views")) {
-                        searchResult.views =
-                            element2.attr("data-value").toString().replace(",", "").toInt()
-                    }
-
-                    for (element2 in element.select("img.video-item--img")) {
-                        searchResult.thumbnailSrc = element2.attr("src").toString()
-                    }
-
-                    for (element2 in element.select("a.video-item--a")) {
-                        searchResult.videoUrl = "${RUMBLE_URL}${element2.attr("href")}"
-                    }
-
-                    searchResults.add(searchResult)
-                }
-
-                return JsoupResponse(null, searchResults)
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            exception = e
-        }
-
-        return JsoupResponse(exception, null)
-    }
-
     fun scrapeVideoSource(id: String): JsoupResponse<String?> {
         var exception: Exception? = null
 
