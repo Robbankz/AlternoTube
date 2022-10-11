@@ -159,6 +159,10 @@ fun Category(
 @Composable
 fun CategoryLabel(category: RumbleCategory) {
     val stringResource = when(category) {
+        RumbleCategory.EditorPicks -> {
+            stringResource(id = R.string.homeScreen_editorPicks)
+        }
+        
         RumbleCategory.News -> {
             stringResource(id = R.string.homeScreen_news)
         }
