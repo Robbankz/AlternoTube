@@ -116,14 +116,22 @@ fun SearchScreen(onVideoTapped: (String) -> Unit) {
                 )
             }
         }
-
-        LazyColumn(
-            modifier = Modifier.weight(1f),
-        ) {
-            items(viewModel.finalizedSearchQuery?.second ?: emptyList()) { rumbleSearchResult ->
-                RumbleSearchResult(rumbleSearchResult = rumbleSearchResult) {
-                    rumbleSearchResult.id?.let {
-                        onVideoTapped(it)
+        
+        viewModel.finalizedSearchQuery?.let {
+            if (it.second.isEmpty()) {
+                Text(
+                    stringResource(id = R.string.searchScreen_no_results_found)
+                )
+            } else {
+                LazyColumn(
+                    modifier = Modifier.weight(1f),
+                ) {
+                    items(it.second) { rumbleSearchResult ->
+                        RumbleSearchResult(rumbleSearchResult = rumbleSearchResult) {
+                            rumbleSearchResult.id?.let { id ->
+                                onVideoTapped(id)
+                            }
+                        }
                     }
                 }
             }
