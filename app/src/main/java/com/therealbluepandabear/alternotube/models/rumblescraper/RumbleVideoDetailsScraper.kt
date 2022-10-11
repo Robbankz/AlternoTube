@@ -11,22 +11,15 @@ class RumbleVideoDetailsScraper private constructor() : VideoDetailsScraper {
         try {
             val document = Jsoup.connect("${RumbleScraperConstants.RUMBLE_URL}$videoId").get()
 
-            val channel = RumbleChannel()
-            val video = RumbleVideo()
-
-            channel.name = document.selectFirst("span.media-heading-name")?.text()
-            channel.isVerified = document.select("svg.verification-badge-icon.media-heading-verified").isNotEmpty()
-
-            video.title = document.title()
-            video.rumbles = RumbleScraperUtils.convertShorthandNumberToInt(
-                document.selectFirst("div.rumbles-vote")?.selectFirst("span.rumbles-count")?.text().toString()
+            val video = RumbleVideo(
+                channel = RumbleChannel(
+                    name = document.selectFirst("span.media-heading-name")?.text(),
+                    isVerified = document.select("svg.verification-badge-icon.media-heading-verified").isNotEmpty()
+                ),
+                title = document.title(),
+                rumbles = RumbleScraperUtils.convertShorthandNumberToInt(document.selectFirst("div.rumbles-vote")?.selectFirst("span.rumbles-count")?.text().toString()),
+                descriptionHTML = document.selectFirst("div.container.content.media-description")?.children().toString()
             )
-
-            video.channel = channel
-
-            for (element in document.select("div.media-description")) {
-                video.descriptionHTML += element
-            }
 
             return JsoupResponse(null, video)
         } catch (e: Exception) {
