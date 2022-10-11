@@ -27,7 +27,9 @@ import com.therealbluepandabear.alternotube.viewmodels.HomeScreenViewModel
 import androidx.compose.ui.layout.ContentScale
 
 @Composable
-private fun TopVideo() {
+private fun TopVideo(
+    onVideoTapped: (RumbleVideo) -> Unit
+) {
     val viewModel: HomeScreenViewModel = viewModel()
 
     Text(
@@ -40,7 +42,7 @@ private fun TopVideo() {
         modifier = Modifier
             .padding(8.dp)
             .clickable {
-
+                onVideoTapped(viewModel.topVideo)
             }
     ) {
         Column {
@@ -228,7 +230,11 @@ fun HomeScreen(
                 .verticalScroll(rememberScrollState())
         ) {
 
-            TopVideo()
+            TopVideo {
+                it.id?.let { id ->
+                    onVideoTapped(id)
+                }
+            }
             Categories(onVideoTapped)
         }
 

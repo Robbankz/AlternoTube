@@ -48,7 +48,8 @@ class RumbleTopVideoScraper {
                 title = document.selectFirst("h3.mediaList-heading.size-xlarge")?.text(),
                 thumbnailSrc = document.select("img.mediaList-image").attr("src"),
                 views = document.selectFirst("small.mediaList-plays")?.text()?.replace(" views", "")?.replace(",", "").toString().toIntOrNull(),
-                uploadDate = document.selectFirst("small.mediaList-timestamp")?.text()
+                uploadDate = document.selectFirst("small.mediaList-timestamp")?.text(),
+                videoUrl = StringConstants.RUMBLE_URL + document.selectFirst("a.mediaList-link.size-xlarge")?.attr("href")
             )
 
             return JsoupResponse(null, video)

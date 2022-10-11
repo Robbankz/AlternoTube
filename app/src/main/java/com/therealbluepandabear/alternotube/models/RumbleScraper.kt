@@ -44,9 +44,10 @@ class RumbleScraper private constructor() {
                     val jsonData = doc.selectFirst("body")?.text()
 
                     val mp4 =
-                        JsonParser.parseString(jsonData).asJsonObject.get("u").asJsonObject.get("mp4").asJsonObject.get(
-                            "url"
-                        ).toString()
+                        if (jsonData?.contains("m3u8") == false)
+                            JsonParser.parseString(jsonData).asJsonObject.get("u").asJsonObject.get("mp4").asJsonObject.get("url").toString()
+                        else
+                            JsonParser.parseString(jsonData).asJsonObject.get("u").asJsonObject.get("hls").asJsonObject.get("url").toString()
 
                     return JsoupResponse(null, mp4.replace("\"", ""))
                 }
