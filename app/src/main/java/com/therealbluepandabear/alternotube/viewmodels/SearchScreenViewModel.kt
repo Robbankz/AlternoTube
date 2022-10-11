@@ -1,6 +1,5 @@
 package com.therealbluepandabear.alternotube.viewmodels
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -22,8 +21,6 @@ class SearchScreenViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             rumbleSearchScraper.scrape(query, page).apply {
                 finalizedSearchQuery = Pair(query, this.data ?: emptyList())
-
-                Log.d("BEPPER", rumbleSearchScraper.scrape("Hi").toString())
             }
         }
     }

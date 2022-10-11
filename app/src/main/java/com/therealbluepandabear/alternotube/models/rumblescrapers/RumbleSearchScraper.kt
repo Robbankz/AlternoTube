@@ -1,6 +1,5 @@
 package com.therealbluepandabear.alternotube.models.rumblescrapers
 
-import android.util.Log
 import com.therealbluepandabear.alternotube.models.*
 import org.jsoup.Jsoup
 
@@ -32,8 +31,6 @@ class RumbleSearchScraper : SearchScraper {
                         else
                             null
                     )
-
-                    Log.d("BEPPER", element.select("svg.video-item--by-verified verification-badge-icon").first().toString())
 
                     searchResults.add(searchResult)
                 }
